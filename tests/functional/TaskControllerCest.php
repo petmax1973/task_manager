@@ -14,14 +14,14 @@ class TaskControllerCest
     public function openIndexPage(FunctionalTester $I)
     {
         $I->amOnPage(['task/index']);
-        $I->see('Compiti', 'h1');
-        $I->see('Nuovo Compito', 'a');
+        $I->see('Issues', 'h1');
+        $I->see('New Issue', 'a');
     }
 
     public function createNewTask(FunctionalTester $I)
     {
         $I->amOnPage(['task/create']);
-        $I->see('Nuovo Compito', 'h1');
+        $I->see('New Issue', 'h1');
         
         $I->submitForm('#task-form', [
             'Task[title]' => 'New Test Task',
