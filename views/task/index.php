@@ -48,7 +48,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             // Description is intentionally omitted in list view
-            'assigned_to',
+            [
+                'attribute' => 'assigned_to',
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    if ($model->status === Task::STATUS_TO_RELEASE) {
+                        return ['style' => 'color: red'];
+                    }
+                    return ['style' => 'color: black'];
+                },
+            ],
             [
                 'attribute' => 'status',
                 'value' => function ($model) {
@@ -66,7 +74,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'allowClear' => true,
                         //'width' => '100%',
                     ],
-                ])
+                ]),
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    if ($model->status === Task::STATUS_TO_RELEASE) {
+                        return ['style' => 'color: red'];
+                    }
+                    return ['style' => 'color: black'];
+                },
             ],
             [
                 'attribute' => 'priority',
