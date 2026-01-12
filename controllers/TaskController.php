@@ -111,6 +111,41 @@ class TaskController extends Controller
     }
 
     /**
+     * Updates the priority of a task via AJAX.
+     * @return array JSON response
+     */
+    public function actionUpdatePriority()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        if (!Yii::$app->request->isAjax) {
+            return ['success' => false, 'message' => 'Invalid request'];
+        }
+
+        $id = Yii::$app->request->post('id');
+        $priority = Yii::$app->request->post('priority');
+
+        if (!$id || !$priority) {
+            return ['success' => false, 'message' => 'Missing parameters'];
+        }
+
+        try {
+            $model = $this->findModel($id);
+            $model->priority = $priority;
+            
+            if ($model->save(false)) {
+                return ['success' => true, 'message' => Yii::t('app', 'Priority updated successfully')];
+            } else {
+                return ['success' => false, 'message' => Yii::t('app', 'Failed to update priority')];
+            }
+        } catch (NotFoundHttpException $e) {
+            return ['success' => false, 'message' => Yii::t('app', 'Task not found')];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Finds the Task model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

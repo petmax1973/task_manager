@@ -106,7 +106,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'priority',
                 'format' => 'raw',
                 'value' => function ($model) {
-                     return str_repeat('●', $model->priority) . str_repeat('○', 5 - $model->priority);
+                    $html = '<div class="priority-dots" data-task-id="' . $model->id . '" data-priority="' . $model->priority . '">';
+                    for ($i = 1; $i <= 5; $i++) {
+                        $filled = $i <= $model->priority ? '●' : '○';
+                        $html .= '<span class="priority-dot" data-priority="' . $i . '" style="cursor: pointer;">' . $filled . '</span>';
+                    }
+                    $html .= '</div>';
+                    return $html;
                 },
                 'filter' => [
                     1 => '●○○○○',
@@ -125,3 +131,64 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+
+<?php
+$updatePriorityUrl = \yii\helpers\Url::to(['task/update-priority']);
+$csrfToken = Yii::$app->request->csrfToken;
+$this->registerJs("
+$(document).on('click', '.priority-dot', function(e) {
+    e.preventDefault();
+    
+    var dot = $(this);
+    var container = dot.closest('.priority-dots');
+    var taskId = container.data('task-id');
+    var newPriority = dot.data('priority');
+    var currentPriority = container.data('priority');
+    
+    // Don't update if clicking on the same priority
+    if (newPriority == currentPriority) {
+        return;
+    }
+    
+    // Show loading state
+    var originalHtml = container.html();
+    container.html('<span style=\"opacity: 0.5;\">⏳</span>');
+    
+    $.ajax({
+        url: '{$updatePriorityUrl}',
+        type: 'POST',
+        data: {
+            id: taskId,
+            priority: newPriority,
+            _csrf: '{$csrfToken}'
+        },
+        success: function(response) {
+            if (response.success) {
+                // Update the UI
+                container.data('priority', newPriority);
+                var html = '';
+                for (var i = 1; i <= 5; i++) {
+                    var filled = i <= newPriority ? '●' : '○';
+                    html += '<span class=\"priority-dot\" data-priority=\"' + i + '\" style=\"cursor: pointer;\">' + filled + '</span>';
+                }
+                container.html(html);
+            } else {
+                container.html(originalHtml);
+                alert(response.message || 'Failed to update priority');
+            }
+        },
+        error: function() {
+            container.html(originalHtml);
+            alert('An error occurred while updating priority');
+        }
+    });
+});
+
+// Add hover effect
+$(document).on('mouseenter', '.priority-dot', function() {
+    $(this).css('opacity', '0.6');
+}).on('mouseleave', '.priority-dot', function() {
+    $(this).css('opacity', '1');
+});
+", \yii\web\View::POS_READY);
+?>
