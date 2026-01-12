@@ -28,7 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             [
                 'attribute' => 'title',
-                'contentOptions' => function ($model, $key, $index, $column) {
+                'format' => 'raw',
+                'value' => function ($model) {
                     $color = 'black';
                     switch ($model->status) {
                         case Task::STATUS_TO_RELEASE:
@@ -44,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             $color = 'black';
                             break;
                     }
-                    return ['style' => 'color: ' . $color];
+                    return Html::a(Html::encode($model->title), ['view', 'id' => $model->id], ['style' => 'color: ' . $color]);
                 },
             ],
             // Description is intentionally omitted in list view
