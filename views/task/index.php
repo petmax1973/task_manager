@@ -84,6 +84,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
+                'attribute' => 'gitlab_issue',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if (!empty($model->gitlab_issue)) {
+                        return Html::a(
+                            '<i class="glyphicon glyphicon-link"></i> GitLab',
+                            $model->gitlab_issue,
+                            [
+                                'class' => 'btn btn-sm btn-info',
+                                'target' => '_blank',
+                                'title' => $model->gitlab_issue
+                            ]
+                        );
+                    }
+                    return '';
+                },
+                'filter' => false,
+            ],
+            [
                 'attribute' => 'priority',
                 'format' => 'raw',
                 'value' => function ($model) {

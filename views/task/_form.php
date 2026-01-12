@@ -19,6 +19,11 @@ use app\models\Task;
 
     <?= $form->field($model, 'assigned_to')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'gitlab_issue')->textInput([
+        'maxlength' => true,
+        'placeholder' => 'https://gitlab.com/project/Admin/-/issues/1493'
+    ]) ?>
+
     <?= $form->field($model, 'status')->dropDownList(Task::getStatusList(), ['prompt' => '']) ?>
 
     <?= $form->field($model, 'priority')->dropDownList([

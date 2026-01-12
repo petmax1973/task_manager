@@ -45,6 +45,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'attribute' => 'gitlab_issue',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if (!empty($model->gitlab_issue)) {
+                        return Html::a(
+                            '<i class="glyphicon glyphicon-link"></i> ' . Yii::t('app', 'Open GitLab Issue'),
+                            $model->gitlab_issue,
+                            [
+                                'class' => 'btn btn-info',
+                                'target' => '_blank'
+                            ]
+                        );
+                    }
+                    return '<span class="not-set">' . Yii::t('app', '(not set)') . '</span>';
+                }
+            ],
+            [
                 'attribute' => 'priority',
                 'format' => 'raw',
                 'value' => function ($model) {

@@ -14,6 +14,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string|null $description
  * @property string|null $assigned_to
  * @property string $status
+ * @property int $priority
+ * @property string|null $gitlab_issue
  * @property int $created_at
  * @property int $updated_at
  */
@@ -51,6 +53,8 @@ class Task extends ActiveRecord
             [['title'], 'required'],
             [['description'], 'string'],
             [['title', 'assigned_to'], 'string', 'max' => 255],
+            [['gitlab_issue'], 'string', 'max' => 500],
+            [['gitlab_issue'], 'url'],
             [['status'], 'string', 'max' => 20],
             [['status'], 'in', 'range' => [
                 self::STATUS_IN_PROGRESS,
@@ -78,6 +82,7 @@ class Task extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'priority' => Yii::t('app', 'Priority'),
+            'gitlab_issue' => Yii::t('app', 'GitLab Issue'),
         ];
     }
 
