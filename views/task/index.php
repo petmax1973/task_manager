@@ -49,15 +49,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             // Description is intentionally omitted in list view
-            [
-                'attribute' => 'assigned_to',
-                'contentOptions' => function ($model, $key, $index, $column) {
-                    if ($model->status === Task::STATUS_TO_RELEASE) {
-                        return ['style' => 'color: red'];
-                    }
-                    return ['style' => 'color: black'];
-                },
-            ],
+            // [
+            //     'attribute' => 'assigned_to',
+            //     'contentOptions' => function ($model, $key, $index, $column) {
+            //         if ($model->status === Task::STATUS_TO_RELEASE) {
+            //             return ['style' => 'color: red'];
+            //         }
+            //         return ['style' => 'color: black'];
+            //     },
+            // ],
             [
                 'attribute' => 'status',
                 'value' => function ($model) {

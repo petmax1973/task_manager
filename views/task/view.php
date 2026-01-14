@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'ntext',
                 'visible' => true,
             ],
-            'assigned_to',
+            //'assigned_to',
             [
                 'attribute' => 'status',
                 'value' => function ($model) {

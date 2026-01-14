@@ -17,7 +17,7 @@ use app\models\Task;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 26]) ?>
 
-    <?= $form->field($model, 'assigned_to')->textInput(['maxlength' => true]) ?>
+    <!-- <?= $form->field($model, 'assigned_to')->textInput(['maxlength' => true]) ?> -->
 
     <?= $form->field($model, 'gitlab_issue')->textInput([
         'maxlength' => true,
