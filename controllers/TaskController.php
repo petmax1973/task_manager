@@ -8,6 +8,7 @@ use app\models\TaskSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * TaskController implements the CRUD actions for Task model.
@@ -24,6 +25,7 @@ class TaskController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                    'change-status' => ['POST'],
                 ],
             ],
         ];
@@ -143,6 +145,32 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
+    }
+
+    /**
+     * Change task status via AJAX
+     * @return string JSON response
+     */
+    public function actionChangeStatus()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        if (Yii::$app->request->isAjax) {
+            $id = Yii::$app->request->post('id');
+            $status = Yii::$app->request->post('status');
+            
+            $task = $this->findModel($id);
+            if ($task) {
+                $task->status = $status;
+                if ($task->save()) {
+                    return ['success' => true, 'message' => 'Status updated successfully'];
+                } else {
+                    return ['success' => false, 'message' => 'Failed to update status', 'errors' => $task->errors];
+                }
+            }
+        }
+        
+        return ['success' => false, 'message' => 'Invalid request'];
     }
 
     /**

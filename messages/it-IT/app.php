@@ -8,6 +8,7 @@ return [
     'Created At' => 'Creato il',
     'Updated At' => 'Aggiornato il',
     'In Progress' => 'In Lavorazione',
+    'In Review' => 'In Verifica',
     'Suspended' => 'Sospeso',
     'To Release' => 'Da Rilasciare',
     'Completed' => 'Completato',

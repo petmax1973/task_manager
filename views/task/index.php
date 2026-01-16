@@ -1,7 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 use app\models\Task;
 
 /* @var $this yii\web\View */
@@ -19,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Create Task'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <?php Pjax::begin(['id' => 'task-grid-pjax']) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -37,6 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             break;
                         case Task::STATUS_IN_PROGRESS:
                             $color = 'green';
+                            break;
+                        case Task::STATUS_IN_REVIEW:
+                            $color = '#FF8C00'; // Orange
                             break;
                         case Task::STATUS_SUSPENDED:
                             $color = '#999'; // Light gray
@@ -60,8 +66,29 @@ $this->params['breadcrumbs'][] = $this->title;
             // ],
             [
                 'attribute' => 'status',
+                'format' => 'raw',
                 'value' => function ($model) {
-                    return $model->getStatusLabel();
+                    $options = Task::getStatusList();
+                    $dropdownOptions = '';
+                    
+                    // Mappa dei colori per gli stati
+                    $colors = [
+                        Task::STATUS_TO_RELEASE => 'red',
+                        Task::STATUS_IN_PROGRESS => 'green', 
+                        Task::STATUS_IN_REVIEW => '#FF8C00',
+                        Task::STATUS_SUSPENDED => '#999',
+                        Task::STATUS_COMPLETED => 'black',
+                    ];
+                    
+                    $currentColor = isset($colors[$model->status]) ? $colors[$model->status] : 'black';
+                    
+                    foreach ($options as $key => $value) {
+                        $selected = ($model->status == $key) ? ' selected' : '';
+                        $dropdownOptions .= '<option value="' . Html::encode($key) . '"' . $selected . '>' . Html::encode($value) . '</option>';
+                    }
+                    
+                    return '<select class="form-control status-dropdown" data-id="' . $model->id . '" style="border: none; background: transparent; font-weight: bold; color: ' . $currentColor . '; width: 100%; min-width: 120px;">' 
+                        . $dropdownOptions . '</select>';
                 },
                 'filter' => \kartik\select2\Select2::widget([
                     'model' => $searchModel,
@@ -77,10 +104,25 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]),
                 'contentOptions' => function ($model, $key, $index, $column) {
-                    if ($model->status === Task::STATUS_TO_RELEASE) {
-                        return ['style' => 'color: red'];
+                    $color = 'black';
+                    switch ($model->status) {
+                        case Task::STATUS_TO_RELEASE:
+                            $color = 'red';
+                            break;
+                        case Task::STATUS_IN_PROGRESS:
+                            $color = 'green';
+                            break;
+                        case Task::STATUS_IN_REVIEW:
+                            $color = '#FF8C00'; // Orange
+                            break;
+                        case Task::STATUS_SUSPENDED:
+                            $color = '#999'; // Light gray
+                            break;
+                        case Task::STATUS_COMPLETED:
+                            $color = 'black';
+                            break;
                     }
-                    return ['style' => 'color: black'];
+                    return ['style' => 'color: ' . $color];
                 },
             ],
             [
@@ -189,6 +231,67 @@ $(document).on('mouseenter', '.priority-dot', function() {
     $(this).css('opacity', '0.6');
 }).on('mouseleave', '.priority-dot', function() {
     $(this).css('opacity', '1');
+});
+
+// Status dropdown change handler
+$('.status-dropdown').on('change', function() {
+    var taskId = $(this).data('id');
+    var newStatus = $(this).val();
+    var dropdown = $(this);
+    
+    // Mappa dei colori
+    var statusColors = {
+        'to_release': 'red',
+        'in_progress': 'green',
+        'in_review': '#FF8C00',
+        'suspended': '#999',
+        'completed': 'black'
+    };
+    
+    // Aggiorna immediatamente il colore
+    dropdown.css('color', statusColors[newStatus] || 'black');
+    
+    $.ajax({
+        url: '" . Url::to(['task/change-status']) . "',
+        type: 'POST',
+        data: {
+            id: taskId,
+            status: newStatus,
+            '" . Yii::$app->request->csrfParam . "': '" . Yii::$app->request->csrfToken . "'
+        },
+        success: function(response) {
+            if (response.success) {
+                // Get current URL parameters to maintain sorting and filtering
+                var urlParams = new URLSearchParams(window.location.search);
+                
+                // Ensure default sorting is applied if none exists
+                if (!urlParams.get('sort')) {
+                    urlParams.set('sort', 'status,priority');
+                }
+                
+                // Reload the page with current parameters to trigger reordering
+                var newUrl = window.location.pathname + '?' + urlParams.toString();
+                window.location.href = newUrl;
+            } else {
+                alert('Errore nell\\'aggiornamento dello stato: ' + (response.message || 'Unknown error'));
+                // Revert dropdown to original value and color if needed
+                var originalValue = dropdown.data('original-value');
+                dropdown.val(originalValue);
+                dropdown.css('color', statusColors[originalValue] || 'black');
+            }
+        },
+        error: function() {
+            alert('Errore di connessione durante l\\'aggiornamento dello stato');
+            var originalValue = dropdown.data('original-value');
+            dropdown.val(originalValue);
+            dropdown.css('color', statusColors[originalValue] || 'black');
+        }
+    });
+});
+
+// Store original values for dropdowns
+$(document).on('focus', '.status-dropdown', function() {
+    $(this).data('original-value', $(this).val());
 });
 ", \yii\web\View::POS_READY);
 ?>

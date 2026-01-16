@@ -22,6 +22,7 @@ use yii\behaviors\TimestampBehavior;
 class Task extends ActiveRecord
 {
     const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_IN_REVIEW = 'in_review';
     const STATUS_SUSPENDED = 'suspended';
     const STATUS_TO_RELEASE = 'to_release';
     const STATUS_COMPLETED = 'completed';
@@ -58,6 +59,7 @@ class Task extends ActiveRecord
             [['status'], 'string', 'max' => 20],
             [['status'], 'in', 'range' => [
                 self::STATUS_IN_PROGRESS,
+                self::STATUS_IN_REVIEW,
                 self::STATUS_SUSPENDED,
                 self::STATUS_TO_RELEASE,
                 self::STATUS_COMPLETED
@@ -94,6 +96,7 @@ class Task extends ActiveRecord
     {
         return [
             self::STATUS_IN_PROGRESS => Yii::t('app', 'In Progress'),
+            self::STATUS_IN_REVIEW => Yii::t('app', 'In Review'),
             self::STATUS_SUSPENDED => Yii::t('app', 'Suspended'),
             self::STATUS_TO_RELEASE => Yii::t('app', 'To Release'),
             self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
