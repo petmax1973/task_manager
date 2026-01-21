@@ -8,8 +8,7 @@ use app\models\Task;
 /* @var $model app\models\Task */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tasks'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+// Remove breadcrumb - we don't want Home / Tasks navigation
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="task-view">

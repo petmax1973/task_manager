@@ -8,9 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Update Task: {name}', [
     'name' => $model->title,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tasks'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+// Remove breadcrumb - we don't want Home / Tasks navigation
 ?>
 <div class="task-update">
 

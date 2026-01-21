@@ -10,12 +10,12 @@ use app\models\Task;
 /* @var $searchModel app\models\TaskSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Tasks');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->title = Yii::t('app', 'Tasks');
+// Remove breadcrumb - we don't want Home / Tasks navigation
 ?>
 <div class="task-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::a(Html::encode($this->title), ['index'], ['style' => 'text-decoration: none; color: inherit;']) ?></h1>
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Task'), ['create'], ['class' => 'btn btn-success']) ?>

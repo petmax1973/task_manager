@@ -6,8 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Task */
 
 $this->title = Yii::t('app', 'Create Task');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tasks'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+// Remove breadcrumb - we don't want Home / Tasks navigation
 ?>
 <div class="task-create">
 
