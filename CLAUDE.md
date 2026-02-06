@@ -284,6 +284,13 @@ Cookie persistente (30 giorni) gestito via `SiteController::actionLanguage()`
 - ✅ Persistenza via cookie
 - ✅ Localizzazione completa UI
 
+### 6. Theme System (Light/Dark)
+- ✅ Selettore temi con icone sole/luna
+- ✅ Persistenza tema via cookie (30 giorni)
+- ✅ CSS variables per tema completo
+- ✅ Preservazione colori status task
+- ✅ Transizioni smooth tra temi
+
 ---
 
 ## 10. Testing
@@ -469,6 +476,197 @@ rm -rf web/assets/*
 # Fix runtime permissions
 chmod 777 runtime/ web/assets/
 ```
+
+---
+
+## 17. Sistema Temi Chiaro/Scuro
+
+### Overview
+Implementato sistema completo di temi chiaro/scuro con selettore interattivo nella navbar. Il sistema utilizza CSS variables per garantire consistenza e supporta la preservazione dei colori specifici degli stati dei task.
+
+### Implementazione Tecnica
+
+#### Controller Action (`SiteController::actionTheme`)
+```php
+public function actionTheme($theme)
+{
+    if (in_array($theme, ['light', 'dark'])) {
+        Yii::$app->response->cookies->add(new \yii\web\Cookie([
+            'name' => 'theme',
+            'value' => $theme,
+            'expire' => time() + 3600 * 24 * 30, // 30 giorni
+        ]));
+    }
+    
+    return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
+}
+```
+
+#### Layout Integration (`views/layouts/main.php`)
+```php
+// Lettura tema da cookie
+$currentTheme = Yii::$app->request->cookies->getValue('theme', 'light');
+
+// Applicazione classe CSS al body
+<body class="d-flex flex-column h-100 theme-<?= $currentTheme ?>">
+
+// Selettore dinamico nella navbar
+[
+    'label' => '<i class="fas fa-' . ($currentTheme === 'dark' ? 'sun' : 'moon') . '"></i>',
+    'url' => ['/site/theme', 'theme' => $currentTheme === 'dark' ? 'light' : 'dark'],
+    'encode' => false,
+]
+```
+
+### CSS Architecture
+
+#### CSS Variables System (`web/css/site.css`)
+```css
+/* Tema Chiaro */
+:root, .theme-light {
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --container-bg: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --navbar-bg: #343a40;
+    --navbar-text: #ffffff;
+    --footer-bg: #f5f5f5;
+    --footer-text: #6c757d;
+    --table-bg: #ffffff;
+    --table-hover: #f8f9fa;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --btn-primary-bg: #007bff;
+    --btn-primary-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Tema Scuro */
+.theme-dark {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --container-bg: #2d3748;
+    --card-bg: #374151;
+    --border-color: #4a5568;
+    --navbar-bg: #1a202c;
+    --navbar-text: #e9ecef;
+    --footer-bg: #2d3748;
+    --footer-text: #a0aec0;
+    --table-bg: #374151;
+    --table-hover: #4a5568;
+    --input-bg: #4a5568;
+    --input-border: #6b7280;
+    --btn-primary-bg: #3182ce;
+    --btn-primary-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+```
+
+#### Intelligent Color Preservation
+```css
+/* Preserva colori inline degli stati task */
+body.theme-light p:not([style*="color"]),
+body.theme-dark p:not([style*="color"]) {
+    color: var(--text-color) !important;
+}
+
+/* Non sovrascrive elementi con style="color:" */
+body.theme-light [style*="color:"]:not(.status-dropdown),
+body.theme-dark [style*="color:"]:not(.status-dropdown) {
+    /* Inline styles have precedence */
+}
+```
+
+### Caratteristiche Specifiche
+
+#### 1. Status Colors Preservation
+Il sistema preserva i colori caratteristici degli stati task:
+- 🟢 **In Lavorazione**: Verde (`#28a745`)
+- 🟠 **In Verifica**: Arancione (`#FF8C00`) 
+- ⚫ **Sospeso**: Grigio (`#999`)
+- 🔴 **To Release**: Rosso (`#dc3545`)
+- ⚫ **Completato**: Nero (`#000000`)
+
+#### 2. Dark Theme Optimizations
+- **Righe tabella**: Background uniforme (no striped effect)
+- **Contrasto**: Colori ottimizzati per dark mode
+- **Shadows**: Ombre più marcate per depth perception
+
+#### 3. Interactive Elements
+- **Theme Toggle**: Animazione rotazione icona (180°)
+- **Smooth Transitions**: 0.3s ease su background-color e color
+- **Hover Effects**: Scale transform su selettore (1.1x)
+
+### JavaScript Enhancement (`web/js/theme.js`)
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    function enhanceThemeToggle() {
+        const themeToggle = document.querySelector('.theme-toggle a');
+        if (themeToggle) {
+            // Accessibilità
+            themeToggle.setAttribute('role', 'button');
+            themeToggle.setAttribute('aria-label', 'Toggle theme');
+            
+            // Supporto tastiera
+            themeToggle.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+            
+            // Animazioni smooth
+            themeToggle.addEventListener('click', function(e) {
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.style.transform = 'rotate(180deg)';
+                    icon.style.transition = 'transform 0.3s ease';
+                }
+                
+                document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+            });
+        }
+    }
+    
+    enhanceThemeToggle();
+});
+```
+
+### Font Awesome Integration
+- **CDN**: Font Awesome 6.0.0 incluso nel layout
+- **Icons**: `fas fa-moon` (tema chiaro) e `fas fa-sun` (tema scuro)
+- **Styling**: Font-size 1.2em con padding custom
+
+### Assets Update (`assets/AppAsset.php`)
+```php
+public $js = [
+    'js/theme.js',
+];
+```
+
+### UX Considerations
+
+#### 1. Visual Feedback
+- **Icon Toggle**: Luna → Sole (chiaro → scuro)
+- **Immediate Response**: Cambio istantaneo dopo click
+- **Tooltip**: Hover text descrittivo dello stato
+
+#### 2. Persistence
+- **Cookie Duration**: 30 giorni
+- **Cross-Session**: Tema mantenuto tra sessioni
+- **Default Fallback**: Tema chiaro se cookie assente
+
+#### 3. Accessibility
+- **Keyboard Navigation**: Enter/Space key support
+- **ARIA Labels**: Screen reader compatibility
+- **High Contrast**: Colori ottimizzati per visibilità
+
+### Performance & Compatibility
+- **CSS Variables Support**: Modern browsers (IE11+)
+- **Graceful Degradation**: Fallback su tema chiaro
+- **Minimal JavaScript**: Solo enhancements, non funzionalità core
+- **No Framework Dependencies**: Vanilla JavaScript
 
 ---
 
