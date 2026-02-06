@@ -74,4 +74,22 @@ class SiteController extends Controller
         
         return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
     }
+
+    /**
+     * Change theme
+     * @param string $theme
+     * @return Response
+     */
+    public function actionTheme($theme)
+    {
+        if (in_array($theme, ['light', 'dark'])) {
+            Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'theme',
+                'value' => $theme,
+                'expire' => time() + 3600 * 24 * 30, // 30 days
+            ]));
+        }
+        
+        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
+    }
 }

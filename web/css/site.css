@@ -125,3 +125,287 @@ a.desc:after {
     border-color: #007bff;
     color: #fff;
 }
+
+/* ==========================================
+   THEME SYSTEM - Light & Dark Themes
+   ========================================== */
+
+/* CSS Variables for themes */
+:root,
+.theme-light {
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --container-bg: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --navbar-bg: #343a40;
+    --navbar-text: #ffffff;
+    --footer-bg: #f5f5f5;
+    --footer-text: #6c757d;
+    --table-bg: #ffffff;
+    --table-hover: #f8f9fa;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --btn-primary-bg: #007bff;
+    --btn-primary-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.theme-dark {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --container-bg: #2d3748;
+    --card-bg: #374151;
+    --border-color: #4a5568;
+    --navbar-bg: #1a202c;
+    --navbar-text: #e9ecef;
+    --footer-bg: #2d3748;
+    --footer-text: #a0aec0;
+    --table-bg: #374151;
+    --table-hover: #4a5568;
+    --input-bg: #4a5568;
+    --input-border: #6b7280;
+    --btn-primary-bg: #3182ce;
+    --btn-primary-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Apply theme variables to body and html */
+body.theme-light,
+body.theme-dark {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+    background-color: var(--bg-color);
+}
+
+/* Container and main content */
+body.theme-light main,
+body.theme-dark main,
+body.theme-light main .container,
+body.theme-dark main .container {
+    background-color: var(--container-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Cards and panels */
+body.theme-light .card,
+body.theme-dark .card,
+body.theme-light .panel,
+body.theme-dark .panel {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Tables */
+body.theme-light table,
+body.theme-dark table {
+    background-color: var(--table-bg) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-light table th,
+body.theme-dark table th,
+body.theme-light table td,
+body.theme-dark table td {
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-light .table-striped tbody tr:nth-of-type(odd),
+body.theme-dark .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-hover) !important;
+}
+
+/* Remove striped effect for dark theme - uniform background */
+body.theme-dark .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-bg) !important;
+}
+
+/* Forms */
+body.theme-light .form-control,
+body.theme-dark .form-control {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-light .form-control:focus,
+body.theme-dark .form-control:focus {
+    background-color: var(--input-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+body.theme-light .btn-primary,
+body.theme-dark .btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    color: var(--btn-primary-text) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+/* Text elements - PRESERVE INLINE STYLES for task status colors */
+body.theme-light p:not([style*="color"]),
+body.theme-dark p:not([style*="color"]),
+body.theme-light h1:not([style*="color"]),
+body.theme-dark h1:not([style*="color"]),
+body.theme-light h2:not([style*="color"]),
+body.theme-dark h2:not([style*="color"]),
+body.theme-light h3:not([style*="color"]),
+body.theme-dark h3:not([style*="color"]),
+body.theme-light h4:not([style*="color"]),
+body.theme-dark h4:not([style*="color"]),
+body.theme-light h5:not([style*="color"]),
+body.theme-dark h5:not([style*="color"]),
+body.theme-light h6:not([style*="color"]),
+body.theme-dark h6:not([style*="color"]),
+body.theme-light div:not([style*="color"]),
+body.theme-dark div:not([style*="color"]),
+body.theme-light span:not([style*="color"]),
+body.theme-dark span:not([style*="color"]),
+body.theme-light label:not([style*="color"]),
+body.theme-dark label:not([style*="color"]) {
+    color: var(--text-color) !important;
+}
+
+/* Links - PRESERVE INLINE STYLES for task status colors */
+body.theme-light a:not([style*="color"]),
+body.theme-dark a:not([style*="color"]) {
+    color: var(--btn-primary-bg) !important;
+}
+
+body.theme-light a:not([style*="color"]):hover,
+body.theme-dark a:not([style*="color"]):hover {
+    color: var(--btn-primary-bg) !important;
+    opacity: 0.8;
+}
+
+/* Table cells - PRESERVE INLINE STYLES for task status colors */
+body.theme-light table td:not([style*="color"]),
+body.theme-dark table td:not([style*="color"]),
+body.theme-light table th:not([style*="color"]),
+body.theme-dark table th:not([style*="color"]) {
+    color: var(--text-color) !important;
+}
+
+/* Status dropdowns - PRESERVE INLINE STYLES */
+body.theme-light .status-dropdown,
+body.theme-dark .status-dropdown {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+}
+
+/* Don't override colors for elements with inline style color */
+body.theme-light [style*="color:"]:not(.status-dropdown),
+body.theme-dark [style*="color:"]:not(.status-dropdown) {
+    /* Let inline styles take precedence */
+}
+
+/* Navigation */
+body.theme-light .navbar-dark,
+body.theme-dark .navbar-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+body.theme-light .navbar-dark .navbar-nav .nav-link,
+body.theme-dark .navbar-dark .navbar-nav .nav-link {
+    color: var(--navbar-text) !important;
+}
+
+body.theme-light .navbar-brand,
+body.theme-dark .navbar-brand {
+    color: var(--navbar-text) !important;
+}
+
+/* Dropdown menus */
+body.theme-light .dropdown-menu,
+body.theme-dark .dropdown-menu {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.theme-light .dropdown-item,
+body.theme-dark .dropdown-item {
+    color: var(--text-color) !important;
+}
+
+body.theme-light .dropdown-item:hover,
+body.theme-dark .dropdown-item:hover {
+    background-color: var(--table-hover) !important;
+    color: var(--text-color) !important;
+}
+
+/* Footer */
+body.theme-light .footer,
+body.theme-dark .footer {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text) !important;
+}
+
+body.theme-light .footer p,
+body.theme-dark .footer p {
+    color: var(--footer-text) !important;
+}
+
+/* GridView styling */
+body.theme-light .grid-view,
+body.theme-dark .grid-view {
+    background-color: var(--container-bg) !important;
+}
+
+body.theme-light .grid-view .summary,
+body.theme-dark .grid-view .summary {
+    color: var(--text-color) !important;
+}
+
+/* Breadcrumbs */
+body.theme-light .breadcrumb,
+body.theme-dark .breadcrumb {
+    background-color: var(--container-bg) !important;
+}
+
+body.theme-light .breadcrumb-item,
+body.theme-dark .breadcrumb-item,
+body.theme-light .breadcrumb-item a,
+body.theme-dark .breadcrumb-item a {
+    color: var(--text-color) !important;
+}
+
+/* Alerts */
+body.theme-light .alert,
+body.theme-dark .alert {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Theme toggle button styling */
+.theme-toggle a {
+    font-size: 1.2em;
+    padding: 0.5rem 1rem !important;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle a:hover {
+    transform: scale(1.1);
+}
+
+/* Dark theme specific adjustments */
+body.theme-dark .navbar-dark {
+    box-shadow: 0 2px 4px var(--shadow) !important;
+}
+
+/* Force theme colors on specific elements */
+body.theme-dark {
+    background: var(--bg-color) !important;
+}
+
+body.theme-light {
+    background: var(--bg-color) !important;
+}
