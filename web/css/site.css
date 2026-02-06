@@ -152,22 +152,22 @@ a.desc:after {
 }
 
 .theme-dark {
-    --bg-color: #1a1a1a;
-    --text-color: #e9ecef;
-    --container-bg: #2d3748;
-    --card-bg: #374151;
-    --border-color: #4a5568;
-    --navbar-bg: #1a202c;
-    --navbar-text: #e9ecef;
-    --footer-bg: #2d3748;
-    --footer-text: #a0aec0;
-    --table-bg: #374151;
-    --table-hover: #4a5568;
-    --input-bg: #4a5568;
-    --input-border: #6b7280;
-    --btn-primary-bg: #3182ce;
+    --bg-color: #0d1117;
+    --text-color: #c9d1d9;
+    --container-bg: #161b22;
+    --card-bg: #21262d;
+    --border-color: #30363d;
+    --navbar-bg: #010409;
+    --navbar-text: #c9d1d9;
+    --footer-bg: #161b22;
+    --footer-text: #8b949e;
+    --table-bg: #21262d;
+    --table-hover: #30363d;
+    --input-bg: #21262d;
+    --input-border: #30363d;
+    --btn-primary-bg: #238636;
     --btn-primary-text: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow: rgba(0, 0, 0, 0.5);
 }
 
 /* Apply theme variables to body and html */
@@ -299,6 +299,31 @@ body.theme-light .status-dropdown,
 body.theme-dark .status-dropdown {
     background-color: var(--input-bg) !important;
     border-color: var(--input-border) !important;
+}
+
+/* Fix for status dropdown in dark theme - remove white background */
+body.theme-dark .status-dropdown,
+body.theme-dark select.form-control {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--input-border) !important;
+}
+
+/* Select2 widget for status filter in dark theme */
+body.theme-dark .select2-container .select2-selection,
+body.theme-dark .select2-dropdown {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-dark .select2-container--default .select2-results__option {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-dark .select2-container--default .select2-results__option--highlighted {
+    background-color: var(--table-hover) !important;
 }
 
 /* Don't override colors for elements with inline style color */
