@@ -250,6 +250,43 @@ body.theme-dark .btn-primary {
     border-color: var(--btn-primary-bg) !important;
 }
 
+/* Improve text readability in dark theme for all button types */
+body.theme-dark .btn-success,
+body.theme-dark .btn-success:link,
+body.theme-dark .btn-success:visited,
+body.theme-dark .btn-success:hover,
+body.theme-dark .btn-success:active {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-dark .btn-info,
+body.theme-dark .btn-info:link,
+body.theme-dark .btn-info:visited,
+body.theme-dark .btn-info:hover,
+body.theme-dark .btn-info:active {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-dark .btn-danger,
+body.theme-dark .btn-danger:link,
+body.theme-dark .btn-danger:visited,
+body.theme-dark .btn-danger:hover,
+body.theme-dark .btn-danger:active {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-dark .btn-primary,
+body.theme-dark .btn-primary:link,
+body.theme-dark .btn-primary:visited,
+body.theme-dark .btn-primary:hover,
+body.theme-dark .btn-primary:active {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Text elements - PRESERVE INLINE STYLES for task status colors */
 body.theme-light p:not([style*="color"]),
 body.theme-dark p:not([style*="color"]),
