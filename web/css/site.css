@@ -1,5 +1,7 @@
-main > .container {
-    padding: 70px 15px 20px;
+main > .container,
+main > .container-fluid {
+    padding-top: 70px;
+    padding-bottom: 20px;
 }
 
 /* Hover effect for Task Manager brand in navbar */
@@ -413,6 +415,36 @@ body.theme-dark .footer {
 body.theme-light .footer p,
 body.theme-dark .footer p {
     color: var(--footer-text) !important;
+}
+
+/* Task description preview under title */
+.task-description-preview {
+    font-size: 0.8em;
+    margin: 3px 0 0 0;
+    padding: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.75;
+    word-break: break-word;
+}
+
+/* GridView table cell spacing */
+.grid-view table td {
+    vertical-align: middle;
+    padding: 6px 8px !important;
+}
+
+.grid-view table th {
+    vertical-align: middle;
+    padding: 8px !important;
+}
+
+/* Keep action buttons on one line */
+.grid-view table td:last-child {
+    white-space: nowrap;
 }
 
 /* GridView styling */

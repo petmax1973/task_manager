@@ -51,7 +51,15 @@ use app\models\Task;
                             $color = 'black';
                             break;
                     }
-                    return Html::a(Html::encode($model->title), ['view', 'id' => $model->id], ['style' => 'color: ' . $color]);
+                    $titleHtml = Html::a(Html::encode($model->title), ['view', 'id' => $model->id], ['style' => 'color: ' . $color]);
+
+                    $desc = trim($model->description);
+                    if (!empty($desc)) {
+                        $descText = Html::encode($desc);
+                        $titleHtml .= '<div class="task-description-preview" style="color: ' . $color . ';">' . $descText . '</div>';
+                    }
+
+                    return $titleHtml;
                 },
             ],
             // Description is intentionally omitted in list view
@@ -87,7 +95,7 @@ use app\models\Task;
                         $dropdownOptions .= '<option value="' . Html::encode($key) . '"' . $selected . '>' . Html::encode($value) . '</option>';
                     }
                     
-                    return '<select class="form-control status-dropdown" data-id="' . $model->id . '" style="border: none; background: transparent; font-weight: bold; color: ' . $currentColor . '; width: 100%; min-width: 120px;">' 
+                    return '<select class="form-control status-dropdown" data-id="' . $model->id . '" style="border: none; background: transparent; font-weight: bold; color: ' . $currentColor . '; width: 100%; min-width: 150px;">' 
                         . $dropdownOptions . '</select>';
                 },
                 'filter' => \kartik\select2\Select2::widget([

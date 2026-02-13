@@ -65,7 +65,7 @@ $currentTheme = Yii::$app->request->cookies->getValue('theme', 'light');
 </header>
 
 <main role="main" class="flex-shrink-0">
-    <div class="container">
+    <div class="container-fluid" style="padding-left: 5%; padding-right: 5%;">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
