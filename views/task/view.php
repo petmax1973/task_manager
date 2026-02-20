@@ -36,7 +36,12 @@ $this->title = $model->title;
                 'format' => 'ntext',
                 'visible' => true,
             ],
-            //'assigned_to',
+            [
+                'attribute' => 'assigned_to',
+                'value' => function ($model) {
+                    return $model->assigned_to ?: '-';
+                },
+            ],
             [
                 'attribute' => 'status',
                 'value' => function ($model) {

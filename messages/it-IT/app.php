@@ -23,4 +23,8 @@ return [
     'Reset' => 'Reset',
     'Select Status' => 'Seleziona Stato',
     'Priority' => 'Priorità',
+    'Select or type assignee...' => 'Seleziona o digita assegnatario...',
+    'Select Assignee' => 'Assegnatario',
+    '(not assigned)' => '(non assegnato)',
+    'Name' => 'Nome',
 ];

@@ -23,4 +23,8 @@ return [
     'Reset' => 'Reset',
     'Select Status' => 'Select Status',
     'Priority' => 'Priority',
+    'Select or type assignee...' => 'Select or type assignee...',
+    'Select Assignee' => 'Select Assignee',
+    '(not assigned)' => '(not assigned)',
+    'Name' => 'Name',
 ];

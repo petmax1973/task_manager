@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use app\models\Assignee;
 
 /**
  * This is the model class for table "task".
@@ -101,6 +102,18 @@ class Task extends ActiveRecord
             self::STATUS_TO_RELEASE => Yii::t('app', 'To Release'),
             self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if (!empty($this->assigned_to)) {
+            Assignee::ensureExists($this->assigned_to);
+        }
     }
 
     /**

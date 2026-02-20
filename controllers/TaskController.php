@@ -26,6 +26,7 @@ class TaskController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'change-status' => ['POST'],
+                    'change-assignee' => ['POST'],
                 ],
             ],
         ];
@@ -170,6 +171,32 @@ class TaskController extends Controller
             }
         }
         
+        return ['success' => false, 'message' => 'Invalid request'];
+    }
+
+    /**
+     * Change task assignee via AJAX
+     * @return string JSON response
+     */
+    public function actionChangeAssignee()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (Yii::$app->request->isAjax) {
+            $id = Yii::$app->request->post('id');
+            $assignedTo = Yii::$app->request->post('assigned_to');
+
+            $task = $this->findModel($id);
+            if ($task) {
+                $task->assigned_to = $assignedTo ?: null;
+                if ($task->save()) {
+                    return ['success' => true, 'message' => 'Assignee updated successfully'];
+                } else {
+                    return ['success' => false, 'message' => 'Failed to update assignee', 'errors' => $task->errors];
+                }
+            }
+        }
+
         return ['success' => false, 'message' => 'Invalid request'];
     }
 

@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Task;
+use app\models\Assignee;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Task */
@@ -17,7 +19,17 @@ use app\models\Task;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 26]) ?>
 
-    <!-- <?= $form->field($model, 'assigned_to')->textInput(['maxlength' => true]) ?> -->
+    <?= $form->field($model, 'assigned_to')->widget(Select2::class, [
+        'data' => Assignee::getList(),
+        'options' => [
+            'placeholder' => Yii::t('app', 'Select or type assignee...'),
+        ],
+        'pluginOptions' => [
+            'tags' => true,
+            'allowClear' => true,
+            'tokenSeparators' => [','],
+        ],
+    ]) ?>
 
     <?= $form->field($model, 'gitlab_issue')->textInput([
         'maxlength' => true,

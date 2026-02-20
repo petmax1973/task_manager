@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\Task;
+use app\models\Assignee;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TaskSearch */
@@ -62,16 +63,62 @@ use app\models\Task;
                     return $titleHtml;
                 },
             ],
-            // Description is intentionally omitted in list view
-            // [
-            //     'attribute' => 'assigned_to',
-            //     'contentOptions' => function ($model, $key, $index, $column) {
-            //         if ($model->status === Task::STATUS_TO_RELEASE) {
-            //             return ['style' => 'color: red'];
-            //         }
-            //         return ['style' => 'color: black'];
-            //     },
-            // ],
+            [
+                'attribute' => 'assigned_to',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $assignees = \app\models\Assignee::getList();
+                    $dropdownOptions = '<option value="" style="text-align: center;">-</option>';
+                    foreach ($assignees as $name) {
+                        $selected = ($model->assigned_to == $name) ? ' selected' : '';
+                        $dropdownOptions .= '<option value="' . Html::encode($name) . '"' . $selected . '>' . Html::encode($name) . '</option>';
+                    }
+
+                    $colors = [
+                        Task::STATUS_TO_RELEASE => 'red',
+                        Task::STATUS_IN_PROGRESS => 'green',
+                        Task::STATUS_IN_REVIEW => '#FF8C00',
+                        Task::STATUS_SUSPENDED => '#999',
+                        Task::STATUS_COMPLETED => 'black',
+                    ];
+                    $currentColor = isset($colors[$model->status]) ? $colors[$model->status] : 'black';
+
+                    return '<select class="form-control assignee-dropdown" data-id="' . $model->id . '" style="border: none; background: transparent; font-weight: bold; color: ' . $currentColor . '; width: 100%; min-width: 120px;">'
+                        . $dropdownOptions . '</select>';
+                },
+                'filter' => \kartik\select2\Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'assigned_to',
+                    'data' => Assignee::getList(),
+                    'options' => [
+                        'placeholder' => Yii::t('app', 'Select Assignee'),
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    $color = 'black';
+                    switch ($model->status) {
+                        case Task::STATUS_TO_RELEASE:
+                            $color = 'red';
+                            break;
+                        case Task::STATUS_IN_PROGRESS:
+                            $color = 'green';
+                            break;
+                        case Task::STATUS_IN_REVIEW:
+                            $color = '#FF8C00';
+                            break;
+                        case Task::STATUS_SUSPENDED:
+                            $color = '#999';
+                            break;
+                        case Task::STATUS_COMPLETED:
+                            $color = 'black';
+                            break;
+                    }
+                    return ['style' => 'color: ' . $color];
+                },
+            ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
@@ -298,8 +345,34 @@ $('.status-dropdown').on('change', function() {
 });
 
 // Store original values for dropdowns
-$(document).on('focus', '.status-dropdown', function() {
+$(document).on('focus', '.status-dropdown, .assignee-dropdown', function() {
     $(this).data('original-value', $(this).val());
+});
+
+// Assignee dropdown change handler
+$('.assignee-dropdown').on('change', function() {
+    var taskId = $(this).data('id');
+    var newAssignee = $(this).val();
+    var dropdown = $(this);
+
+    $.ajax({
+        url: '" . Url::to(['task/change-assignee']) . "',
+        type: 'POST',
+        data: {
+            id: taskId,
+            assigned_to: newAssignee,
+            '" . Yii::$app->request->csrfParam . "': '" . Yii::$app->request->csrfToken . "'
+        },
+        success: function(response) {
+            if (!response.success) {
+                alert(response.message || 'Error');
+                dropdown.val(dropdown.data('original-value'));
+            }
+        },
+        error: function() {
+            dropdown.val(dropdown.data('original-value'));
+        }
+    });
 });
 ", \yii\web\View::POS_READY);
 ?>
