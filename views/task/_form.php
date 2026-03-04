@@ -31,6 +31,8 @@ use kartik\select2\Select2;
         ],
     ]) ?>
 
+    <?= $form->field($model, 'project')->dropDownList(Task::getProjectList(), ['prompt' => Yii::t('app', 'Select Project...')]) ?>
+
     <?= $form->field($model, 'gitlab_issue')->textInput([
         'maxlength' => true,
         'placeholder' => 'https://gitlab.com/project/Admin/-/issues/1493'

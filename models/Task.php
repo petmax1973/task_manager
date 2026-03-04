@@ -29,6 +29,11 @@ class Task extends ActiveRecord
     const STATUS_TO_RELEASE = 'to_release';
     const STATUS_COMPLETED = 'completed';
 
+    const PROJECT_ZOTSELL = 'zotsell';
+    const PROJECT_HELP = 'help';
+    const PROJECT_MAGENTO = 'magento';
+    const PROJECT_EBIKE = 'ebike';
+
     /**
      * {@inheritdoc}
      */
@@ -70,6 +75,13 @@ class Task extends ActiveRecord
             [['status'], 'default', 'value' => self::STATUS_IN_PROGRESS],
             [['priority'], 'integer', 'min' => 1, 'max' => 5],
             [['priority'], 'default', 'value' => 1],
+            [['project'], 'string', 'max' => 50],
+            [['project'], 'in', 'range' => [
+                self::PROJECT_ZOTSELL,
+                self::PROJECT_HELP,
+                self::PROJECT_MAGENTO,
+                self::PROJECT_EBIKE,
+            ]],
         ];
     }
 
@@ -88,6 +100,7 @@ class Task extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
             'priority' => Yii::t('app', 'Priority'),
             'gitlab_issue' => Yii::t('app', 'GitLab Issue'),
+            'project' => Yii::t('app', 'Project'),
         ];
     }
 
@@ -117,6 +130,30 @@ class Task extends ActiveRecord
         if (!empty($this->assigned_to)) {
             Assignee::ensureExists($this->assigned_to);
         }
+    }
+
+    /**
+     * Get list of available projects
+     * @return array
+     */
+    public static function getProjectList()
+    {
+        return [
+            self::PROJECT_ZOTSELL => 'Zotsell',
+            self::PROJECT_HELP => 'Help',
+            self::PROJECT_MAGENTO => 'Magento',
+            self::PROJECT_EBIKE => 'eBike',
+        ];
+    }
+
+    /**
+     * Get project label
+     * @return string
+     */
+    public function getProjectLabel()
+    {
+        $projects = self::getProjectList();
+        return isset($projects[$this->project]) ? $projects[$this->project] : '';
     }
 
     /**

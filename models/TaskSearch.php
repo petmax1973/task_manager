@@ -20,7 +20,7 @@ class TaskSearch extends Task
     {
         return [
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'description', 'assigned_to', 'status'], 'safe'],
+            [['title', 'description', 'assigned_to', 'status', 'project'], 'safe'],
             [['statusFilter'], 'safe'],
         ];
     }
@@ -86,6 +86,9 @@ class TaskSearch extends Task
 
         // Search by assigned_to
         $query->andFilterWhere(['like', 'assigned_to', $this->assigned_to]);
+
+        // Filter by project
+        $query->andFilterWhere(['project' => $this->project]);
 
         // Filter by status (single or multiple)
         if (!empty($this->statusFilter) && is_array($this->statusFilter)) {

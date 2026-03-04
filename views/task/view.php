@@ -38,6 +38,12 @@ $this->title = $model->title;
                 'visible' => true,
             ],
             [
+                'attribute' => 'project',
+                'value' => function ($model) {
+                    return $model->getProjectLabel() ?: '-';
+                },
+            ],
+            [
                 'attribute' => 'assigned_to',
                 'value' => function ($model) {
                     return $model->assigned_to ?: '-';

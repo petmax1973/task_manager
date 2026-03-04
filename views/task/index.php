@@ -67,6 +67,13 @@ use app\models\Assignee;
                 },
             ],
             [
+                'attribute' => 'project',
+                'value' => function ($model) {
+                    return $model->getProjectLabel();
+                },
+                'filter' => Task::getProjectList(),
+            ],
+            [
                 'attribute' => 'assigned_to',
                 'format' => 'raw',
                 'value' => function ($model) {

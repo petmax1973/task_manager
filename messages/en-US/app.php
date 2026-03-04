@@ -44,4 +44,6 @@ return [
     'File not found.' => 'File not found.',
     'Are you sure you want to delete this file?' => 'Are you sure you want to delete this file?',
     'attachment(s)' => 'attachment(s)',
+    'Project' => 'Project',
+    'Select Project...' => 'Select Project...',
 ];
