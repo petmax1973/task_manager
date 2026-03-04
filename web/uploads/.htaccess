@@ -1,0 +1,3 @@
+# Deny direct access to uploaded files
+# Files are served through the controller for security
+Require all denied

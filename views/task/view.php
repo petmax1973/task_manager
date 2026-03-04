@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 use app\models\Task;
 
@@ -79,4 +80,88 @@ $this->title = $model->title;
         ],
     ]) ?>
 
+    <!-- Attachments Section -->
+    <div class="task-attachments mt-4">
+        <h3><i class="fas fa-paperclip"></i> <?= Yii::t('app', 'Attachments') ?></h3>
+
+        <?php if (!empty($model->attachments)): ?>
+        <table class="table table-bordered attachments-table">
+            <thead>
+                <tr>
+                    <th><?= Yii::t('app', 'File Name') ?></th>
+                    <th><?= Yii::t('app', 'Size') ?></th>
+                    <th><?= Yii::t('app', 'Uploaded At') ?></th>
+                    <th style="width: 150px;"><?= Yii::t('app', 'Actions') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($model->attachments as $attachment): ?>
+                <tr>
+                    <td>
+                        <i class="fas fa-file"></i>
+                        <?= Html::encode($attachment->original_name) ?>
+                    </td>
+                    <td><?= $attachment->getFormattedSize() ?></td>
+                    <td><?= Yii::$app->formatter->asDatetime($attachment->created_at) ?></td>
+                    <td>
+                        <?= Html::a(
+                            '<i class="fas fa-download"></i> ' . Yii::t('app', 'Download'),
+                            ['download-attachment', 'id' => $attachment->id],
+                            ['class' => 'btn btn-sm btn-info']
+                        ) ?>
+                        <?= Html::a(
+                            '<i class="fas fa-trash"></i>',
+                            ['delete-attachment', 'id' => $attachment->id],
+                            [
+                                'class' => 'btn btn-sm btn-danger',
+                                'data' => [
+                                    'confirm' => Yii::t('app', 'Are you sure you want to delete this file?'),
+                                    'method' => 'post',
+                                ],
+                            ]
+                        ) ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+        <p class="text-muted"><?= Yii::t('app', 'No attachments yet.') ?></p>
+        <?php endif; ?>
+
+        <!-- Upload Form -->
+        <?= Html::beginForm(['upload-attachment', 'id' => $model->id], 'post', ['enctype' => 'multipart/form-data', 'class' => 'mt-3']) ?>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <?= Html::fileInput('attachments[]', null, [
+                            'multiple' => true,
+                            'class' => 'custom-file-input',
+                            'id' => 'attachmentFiles',
+                        ]) ?>
+                        <label class="custom-file-label" for="attachmentFiles"><?= Yii::t('app', 'Choose files...') ?></label>
+                    </div>
+                    <div class="input-group-append">
+                        <?= Html::submitButton('<i class="fas fa-upload"></i> ' . Yii::t('app', 'Upload'), ['class' => 'btn btn-success']) ?>
+                    </div>
+                </div>
+            </div>
+        <?= Html::endForm() ?>
+    </div>
+
 </div>
+
+<?php
+$this->registerJs("
+// Update file input label with selected file names
+$('#attachmentFiles').on('change', function() {
+    var files = this.files;
+    var label = $(this).next('.custom-file-label');
+    if (files.length > 1) {
+        label.text(files.length + ' " . Yii::t('app', 'files selected') . "');
+    } else if (files.length === 1) {
+        label.text(files[0].name);
+    }
+});
+", \yii\web\View::POS_READY);
+?>

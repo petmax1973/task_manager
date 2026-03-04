@@ -503,3 +503,36 @@ body.theme-dark {
 body.theme-light {
     background: var(--bg-color) !important;
 }
+
+/* Attachments section */
+.task-attachments .attachments-table {
+    background-color: var(--table-bg) !important;
+}
+
+.task-attachments .attachments-table th,
+.task-attachments .attachments-table td {
+    border-color: var(--border-color) !important;
+    vertical-align: middle;
+}
+
+.attachment-icon {
+    color: #6c757d;
+    font-size: 1.1em;
+    margin-left: 10px;
+}
+
+body.theme-dark .attachment-icon {
+    color: #8b949e;
+}
+
+body.theme-dark .custom-file-label {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-color) !important;
+}
+
+body.theme-dark .custom-file-label::after {
+    background-color: var(--card-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text-color) !important;
+}

@@ -125,4 +125,12 @@ class Task extends ActiveRecord
         $statuses = self::getStatusList();
         return isset($statuses[$this->status]) ? $statuses[$this->status] : $this->status;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttachments()
+    {
+        return $this->hasMany(TaskAttachment::class, ['task_id' => 'id']);
+    }
 }

@@ -184,8 +184,9 @@ use app\models\Assignee;
                 'attribute' => 'gitlab_issue',
                 'format' => 'raw',
                 'value' => function ($model) {
+                    $html = '';
                     if (!empty($model->gitlab_issue)) {
-                        return Html::a(
+                        $html .= Html::a(
                             '<i class="glyphicon glyphicon-link"></i> GitLab',
                             $model->gitlab_issue,
                             [
@@ -195,7 +196,12 @@ use app\models\Assignee;
                             ]
                         );
                     }
-                    return '';
+                    if (!empty($model->attachments)) {
+                        $count = count($model->attachments);
+                        $html .= ' <span class="attachment-icon" title="' . $count . ' ' . Yii::t('app', 'attachment(s)') . '">'
+                            . '<i class="fas fa-paperclip"></i></span>';
+                    }
+                    return $html;
                 },
                 'filter' => false,
             ],

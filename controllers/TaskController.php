@@ -4,11 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Task;
+use app\models\TaskAttachment;
 use app\models\TaskSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * TaskController implements the CRUD actions for Task model.
@@ -27,6 +29,8 @@ class TaskController extends Controller
                     'delete' => ['POST'],
                     'change-status' => ['POST'],
                     'change-assignee' => ['POST'],
+                    'upload-attachment' => ['POST'],
+                    'delete-attachment' => ['POST'],
                 ],
             ],
         ];
@@ -108,9 +112,110 @@ class TaskController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        // Delete physical files before deleting the task (FK CASCADE handles DB records)
+        foreach ($model->attachments as $attachment) {
+            $filePath = $attachment->getFilePath();
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        $model->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Upload attachments to a task.
+     * @param integer $id Task ID
+     * @return mixed
+     */
+    public function actionUploadAttachment($id)
+    {
+        $task = $this->findModel($id);
+        $files = UploadedFile::getInstancesByName('attachments');
+
+        if (empty($files)) {
+            Yii::$app->session->setFlash('error', Yii::t('app', 'No files selected.'));
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        $uploadPath = Yii::getAlias('@webroot/uploads/task-attachments/');
+        $successCount = 0;
+
+        foreach ($files as $file) {
+            $extension = $file->extension;
+            $storedName = TaskAttachment::generateStoredName($extension);
+
+            if ($file->saveAs($uploadPath . $storedName)) {
+                $attachment = new TaskAttachment();
+                $attachment->task_id = $task->id;
+                $attachment->original_name = $file->name;
+                $attachment->stored_name = $storedName;
+                $attachment->mime_type = $file->type;
+                $attachment->file_size = $file->size;
+
+                if ($attachment->save()) {
+                    $successCount++;
+                } else {
+                    // Remove the file if DB save fails
+                    @unlink($uploadPath . $storedName);
+                }
+            }
+        }
+
+        if ($successCount > 0) {
+            Yii::$app->session->setFlash('success', Yii::t('app', '{count} file(s) uploaded successfully.', ['count' => $successCount]));
+        }
+
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    /**
+     * Download an attachment.
+     * @param integer $id Attachment ID
+     * @return mixed
+     */
+    public function actionDownloadAttachment($id)
+    {
+        $attachment = TaskAttachment::findOne($id);
+        if ($attachment === null) {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+
+        $filePath = $attachment->getFilePath();
+        if (!file_exists($filePath)) {
+            throw new NotFoundHttpException(Yii::t('app', 'File not found.'));
+        }
+
+        return Yii::$app->response->sendFile($filePath, $attachment->original_name);
+    }
+
+    /**
+     * Delete an attachment.
+     * @param integer $id Attachment ID
+     * @return mixed
+     */
+    public function actionDeleteAttachment($id)
+    {
+        $attachment = TaskAttachment::findOne($id);
+        if ($attachment === null) {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+
+        $taskId = $attachment->task_id;
+        $filePath = $attachment->getFilePath();
+
+        if ($attachment->delete()) {
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            Yii::$app->session->setFlash('success', Yii::t('app', 'File deleted successfully.'));
+        }
+
+        return $this->redirect(['view', 'id' => $taskId]);
     }
 
     /**
