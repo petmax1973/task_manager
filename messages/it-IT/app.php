@@ -7,6 +7,7 @@ return [
     'Status' => 'Stato',
     'Created At' => 'Creato il',
     'Updated At' => 'Aggiornato il',
+    'Active' => 'In Corso',
     'In Progress' => 'In Lavorazione',
     'In Review' => 'In Verifica',
     'Suspended' => 'Sospeso',

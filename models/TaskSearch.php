@@ -50,8 +50,8 @@ class TaskSearch extends Task
             'sort' => [
                 'attributes' => [
                     'status' => [
-                        'asc' => new Expression("FIELD(status, 'to_release', 'in_progress', 'in_review', 'suspended', 'completed')"),
-                        'desc' => new Expression("FIELD(status, 'completed', 'suspended', 'in_review', 'in_progress', 'to_release')"),
+                        'asc' => new Expression("FIELD(status, 'active', 'to_release', 'in_progress', 'in_review', 'suspended', 'completed')"),
+                        'desc' => new Expression("FIELD(status, 'completed', 'suspended', 'in_review', 'in_progress', 'to_release', 'active')"),
                     ],
                     'priority',
                     'title',

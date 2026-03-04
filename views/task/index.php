@@ -36,6 +36,9 @@ use app\models\Assignee;
                 'value' => function ($model) {
                     $color = 'black';
                     switch ($model->status) {
+                        case Task::STATUS_ACTIVE:
+                            $color = '#007bff'; // Blue
+                            break;
                         case Task::STATUS_TO_RELEASE:
                             $color = 'red';
                             break;
@@ -100,6 +103,9 @@ use app\models\Assignee;
                 'contentOptions' => function ($model, $key, $index, $column) {
                     $color = 'black';
                     switch ($model->status) {
+                        case Task::STATUS_ACTIVE:
+                            $color = '#007bff';
+                            break;
                         case Task::STATUS_TO_RELEASE:
                             $color = 'red';
                             break;
@@ -161,6 +167,9 @@ use app\models\Assignee;
                 'contentOptions' => function ($model, $key, $index, $column) {
                     $color = 'black';
                     switch ($model->status) {
+                        case Task::STATUS_ACTIVE:
+                            $color = '#007bff';
+                            break;
                         case Task::STATUS_TO_RELEASE:
                             $color = 'red';
                             break;
@@ -302,6 +311,7 @@ $('.status-dropdown').on('change', function() {
     
     // Mappa dei colori
     var statusColors = {
+        'active': '#007bff',
         'to_release': 'red',
         'in_progress': 'green',
         'in_review': '#FF8C00',

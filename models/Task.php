@@ -22,6 +22,7 @@ use app\models\Assignee;
  */
 class Task extends ActiveRecord
 {
+    const STATUS_ACTIVE = 'active';
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_IN_REVIEW = 'in_review';
     const STATUS_SUSPENDED = 'suspended';
@@ -59,6 +60,7 @@ class Task extends ActiveRecord
             [['gitlab_issue'], 'url'],
             [['status'], 'string', 'max' => 20],
             [['status'], 'in', 'range' => [
+                self::STATUS_ACTIVE,
                 self::STATUS_IN_PROGRESS,
                 self::STATUS_IN_REVIEW,
                 self::STATUS_SUSPENDED,
@@ -96,6 +98,7 @@ class Task extends ActiveRecord
     public static function getStatusList()
     {
         return [
+            self::STATUS_ACTIVE => Yii::t('app', 'Active'),
             self::STATUS_IN_PROGRESS => Yii::t('app', 'In Progress'),
             self::STATUS_IN_REVIEW => Yii::t('app', 'In Review'),
             self::STATUS_SUSPENDED => Yii::t('app', 'Suspended'),
