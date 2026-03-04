@@ -57,4 +57,7 @@ return [
     'Cannot delete: value is in use by one or more tasks.' => 'Impossibile eliminare: il valore è in uso da uno o più task.',
     'Error' => 'Errore',
     'Slug can only contain lowercase letters, numbers and underscores.' => 'Lo slug può contenere solo lettere minuscole, numeri e underscore.',
+    'Name (IT)' => 'Nome (IT)',
+    'Name (EN)' => 'Nome (EN)',
+    'At least one name (IT or EN) is required.' => 'Almeno un nome (IT o EN) è obbligatorio.',
 ];

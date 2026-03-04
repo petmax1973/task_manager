@@ -57,4 +57,7 @@ return [
     'Cannot delete: value is in use by one or more tasks.' => 'Cannot delete: value is in use by one or more tasks.',
     'Error' => 'Error',
     'Slug can only contain lowercase letters, numbers and underscores.' => 'Slug can only contain lowercase letters, numbers and underscores.',
+    'Name (IT)' => 'Name (IT)',
+    'Name (EN)' => 'Name (EN)',
+    'At least one name (IT or EN) is required.' => 'At least one name (IT or EN) is required.',
 ];

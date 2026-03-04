@@ -32,7 +32,7 @@ class SettingsController extends Controller
 
     public function actionIndex()
     {
-        $projects = Project::find()->orderBy('name')->all();
+        $projects = Project::find()->orderBy('slug')->all();
         $statuses = Status::find()->orderBy('sort_order')->all();
         $assignees = Assignee::find()->orderBy('name')->all();
 
@@ -49,10 +49,11 @@ class SettingsController extends Controller
 
         $model = new Project();
         $model->slug = Yii::$app->request->post('slug');
-        $model->name = Yii::$app->request->post('name');
+        $model->name_it = Yii::$app->request->post('name_it') ?: null;
+        $model->name_en = Yii::$app->request->post('name_en') ?: null;
 
         if ($model->save()) {
-            return ['success' => true, 'id' => $model->id, 'slug' => $model->slug, 'name' => $model->name];
+            return ['success' => true, 'id' => $model->id, 'slug' => $model->slug, 'name_it' => $model->name_it, 'name_en' => $model->name_en];
         }
 
         return ['success' => false, 'errors' => $model->getFirstErrors()];
@@ -82,12 +83,13 @@ class SettingsController extends Controller
 
         $model = new Status();
         $model->slug = Yii::$app->request->post('slug');
-        $model->name = Yii::$app->request->post('name');
+        $model->name_it = Yii::$app->request->post('name_it') ?: null;
+        $model->name_en = Yii::$app->request->post('name_en') ?: null;
         $model->color = Yii::$app->request->post('color', 'black');
         $model->sort_order = Yii::$app->request->post('sort_order', 0);
 
         if ($model->save()) {
-            return ['success' => true, 'id' => $model->id, 'slug' => $model->slug, 'name' => $model->name, 'color' => $model->color, 'sort_order' => $model->sort_order];
+            return ['success' => true, 'id' => $model->id, 'slug' => $model->slug, 'name_it' => $model->name_it, 'name_en' => $model->name_en, 'color' => $model->color, 'sort_order' => $model->sort_order];
         }
 
         return ['success' => false, 'errors' => $model->getFirstErrors()];

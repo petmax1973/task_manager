@@ -17,17 +17,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <!-- Projects -->
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="card mb-4">
                 <div class="card-header"><strong><?= Yii::t('app', 'Projects') ?></strong></div>
                 <div class="card-body">
                     <table class="table table-sm" id="projects-table">
-                        <thead><tr><th><?= Yii::t('app', 'Slug') ?></th><th><?= Yii::t('app', 'Name') ?></th><th></th></tr></thead>
+                        <thead><tr>
+                            <th><?= Yii::t('app', 'Slug') ?></th>
+                            <th><?= Yii::t('app', 'Name (IT)') ?></th>
+                            <th><?= Yii::t('app', 'Name (EN)') ?></th>
+                            <th></th>
+                        </tr></thead>
                         <tbody>
                         <?php foreach ($projects as $project): ?>
                             <tr data-id="<?= $project->id ?>">
                                 <td><?= Html::encode($project->slug) ?></td>
-                                <td><?= Html::encode($project->name) ?></td>
+                                <td><?= Html::encode($project->name_it) ?></td>
+                                <td><?= Html::encode($project->name_en) ?></td>
                                 <td>
                                     <button class="btn btn-sm btn-danger delete-project" data-id="<?= $project->id ?>" title="<?= Yii::t('app', 'Delete') ?>">
                                         <i class="fas fa-trash"></i>
@@ -39,8 +45,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     </table>
                     <hr>
                     <form id="add-project-form" class="form-inline">
-                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="slug" placeholder="<?= Yii::t('app', 'Slug') ?>" required style="width: 100px;">
-                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name" placeholder="<?= Yii::t('app', 'Name') ?>" required style="width: 120px;">
+                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="slug" placeholder="<?= Yii::t('app', 'Slug') ?>" required style="width: 90px;">
+                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name_it" placeholder="<?= Yii::t('app', 'Name (IT)') ?>" style="width: 100px;">
+                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name_en" placeholder="<?= Yii::t('app', 'Name (EN)') ?>" style="width: 100px;">
                         <button type="submit" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus"></i></button>
                     </form>
                 </div>
@@ -75,16 +82,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <!-- Statuses -->
-        <div class="col-md-5">
+        <div class="col-md-10">
             <div class="card mb-4">
                 <div class="card-header"><strong><?= Yii::t('app', 'Statuses') ?></strong></div>
                 <div class="card-body">
                     <table class="table table-sm" id="statuses-table">
                         <thead><tr>
                             <th><?= Yii::t('app', 'Slug') ?></th>
-                            <th><?= Yii::t('app', 'Name') ?></th>
+                            <th><?= Yii::t('app', 'Name (IT)') ?></th>
+                            <th><?= Yii::t('app', 'Name (EN)') ?></th>
                             <th><?= Yii::t('app', 'Color') ?></th>
                             <th><?= Yii::t('app', 'Sort Order') ?></th>
                             <th></th>
@@ -93,7 +103,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php foreach ($statuses as $status): ?>
                             <tr data-id="<?= $status->id ?>">
                                 <td><?= Html::encode($status->slug) ?></td>
-                                <td><span style="color: <?= Html::encode($status->color) ?>; font-weight: bold;"><?= Html::encode($status->name) ?></span></td>
+                                <td><span style="color: <?= Html::encode($status->color) ?>; font-weight: bold;"><?= Html::encode($status->name_it) ?></span></td>
+                                <td><span style="color: <?= Html::encode($status->color) ?>; font-weight: bold;"><?= Html::encode($status->name_en) ?></span></td>
                                 <td><span class="color-swatch" style="display:inline-block;width:20px;height:20px;background:<?= Html::encode($status->color) ?>;border:1px solid #ccc;vertical-align:middle;"></span> <?= Html::encode($status->color) ?></td>
                                 <td><?= $status->sort_order ?></td>
                                 <td>
@@ -108,7 +119,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <hr>
                     <form id="add-status-form" class="form-inline">
                         <input type="text" class="form-control form-control-sm mr-1 mb-1" name="slug" placeholder="<?= Yii::t('app', 'Slug') ?>" required style="width: 90px;">
-                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name" placeholder="<?= Yii::t('app', 'Name') ?>" required style="width: 100px;">
+                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name_it" placeholder="<?= Yii::t('app', 'Name (IT)') ?>" style="width: 100px;">
+                        <input type="text" class="form-control form-control-sm mr-1 mb-1" name="name_en" placeholder="<?= Yii::t('app', 'Name (EN)') ?>" style="width: 100px;">
                         <input type="color" class="form-control form-control-sm mr-1 mb-1" name="color" value="#000000" title="<?= Yii::t('app', 'Color') ?>" style="width: 40px; padding: 2px;">
                         <input type="number" class="form-control form-control-sm mr-1 mb-1" name="sort_order" placeholder="<?= Yii::t('app', 'Sort Order') ?>" value="0" style="width: 60px;">
                         <button type="submit" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus"></i></button>
@@ -130,19 +142,31 @@ $csrfParam = Yii::$app->request->csrfParam;
 $csrfToken = Yii::$app->request->csrfToken;
 $confirmDeleteMsg = Yii::t('app', 'Are you sure you want to delete this item?');
 $errorPrefix = Yii::t('app', 'Error');
+$atLeastOneNameMsg = Yii::t('app', 'At least one name (IT or EN) is required.');
 
 $this->registerJs("
 // --- Projects ---
 $('#add-project-form').on('submit', function(e) {
     e.preventDefault();
     var form = $(this);
+    var nameIt = form.find('[name=name_it]').val().trim();
+    var nameEn = form.find('[name=name_en]').val().trim();
+    if (!nameIt && !nameEn) {
+        alert('{$atLeastOneNameMsg}');
+        return;
+    }
     $.ajax({
         url: '{$addProjectUrl}',
         type: 'POST',
         data: form.serialize() + '&{$csrfParam}={$csrfToken}',
         success: function(r) {
             if (r.success) {
-                var row = '<tr data-id=\"' + r.id + '\"><td>' + $('<span>').text(r.slug).html() + '</td><td>' + $('<span>').text(r.name).html() + '</td><td><button class=\"btn btn-sm btn-danger delete-project\" data-id=\"' + r.id + '\"><i class=\"fas fa-trash\"></i></button></td></tr>';
+                var row = '<tr data-id=\"' + r.id + '\">'
+                    + '<td>' + $('<span>').text(r.slug).html() + '</td>'
+                    + '<td>' + $('<span>').text(r.name_it || '').html() + '</td>'
+                    + '<td>' + $('<span>').text(r.name_en || '').html() + '</td>'
+                    + '<td><button class=\"btn btn-sm btn-danger delete-project\" data-id=\"' + r.id + '\"><i class=\"fas fa-trash\"></i></button></td>'
+                    + '</tr>';
                 $('#projects-table tbody').append(row);
                 form[0].reset();
             } else {
@@ -170,15 +194,29 @@ $(document).on('click', '.delete-project', function() {
 $('#add-status-form').on('submit', function(e) {
     e.preventDefault();
     var form = $(this);
+    var nameIt = form.find('[name=name_it]').val().trim();
+    var nameEn = form.find('[name=name_en]').val().trim();
+    if (!nameIt && !nameEn) {
+        alert('{$atLeastOneNameMsg}');
+        return;
+    }
     $.ajax({
         url: '{$addStatusUrl}',
         type: 'POST',
         data: form.serialize() + '&{$csrfParam}={$csrfToken}',
         success: function(r) {
             if (r.success) {
-                var nameHtml = '<span style=\"color:' + r.color + ';font-weight:bold;\">' + $('<span>').text(r.name).html() + '</span>';
+                var nameItHtml = '<span style=\"color:' + r.color + ';font-weight:bold;\">' + $('<span>').text(r.name_it || '').html() + '</span>';
+                var nameEnHtml = '<span style=\"color:' + r.color + ';font-weight:bold;\">' + $('<span>').text(r.name_en || '').html() + '</span>';
                 var colorHtml = '<span class=\"color-swatch\" style=\"display:inline-block;width:20px;height:20px;background:' + r.color + ';border:1px solid #ccc;vertical-align:middle;\"></span> ' + $('<span>').text(r.color).html();
-                var row = '<tr data-id=\"' + r.id + '\"><td>' + $('<span>').text(r.slug).html() + '</td><td>' + nameHtml + '</td><td>' + colorHtml + '</td><td>' + r.sort_order + '</td><td><button class=\"btn btn-sm btn-danger delete-status\" data-id=\"' + r.id + '\"><i class=\"fas fa-trash\"></i></button></td></tr>';
+                var row = '<tr data-id=\"' + r.id + '\">'
+                    + '<td>' + $('<span>').text(r.slug).html() + '</td>'
+                    + '<td>' + nameItHtml + '</td>'
+                    + '<td>' + nameEnHtml + '</td>'
+                    + '<td>' + colorHtml + '</td>'
+                    + '<td>' + r.sort_order + '</td>'
+                    + '<td><button class=\"btn btn-sm btn-danger delete-status\" data-id=\"' + r.id + '\"><i class=\"fas fa-trash\"></i></button></td>'
+                    + '</tr>';
                 $('#statuses-table tbody').append(row);
                 form[0].reset();
             } else {
