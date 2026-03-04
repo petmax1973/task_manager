@@ -39,7 +39,7 @@ class TaskSearchTest extends Unit
     public function testFilterBySingleStatus()
     {
         $searchModel = new TaskSearch();
-        $searchModel->status = Task::STATUS_IN_PROGRESS;
+        $searchModel->status = Task::STATUS_ACTIVE;
         
         $dataProvider = $searchModel->search([]);
         
@@ -49,7 +49,7 @@ class TaskSearchTest extends Unit
     public function testFilterByMultipleStatuses()
     {
         $searchModel = new TaskSearch();
-        $searchModel->statusFilter = [Task::STATUS_IN_PROGRESS, Task::STATUS_TO_RELEASE];
+        $searchModel->statusFilter = [Task::STATUS_ACTIVE, Task::STATUS_TO_RELEASE];
         
         $dataProvider = $searchModel->search([]);
         
@@ -60,7 +60,7 @@ class TaskSearchTest extends Unit
     {
         $searchModel = new TaskSearch();
         $searchModel->title = 'test';
-        $searchModel->statusFilter = [Task::STATUS_IN_PROGRESS];
+        $searchModel->statusFilter = [Task::STATUS_ACTIVE];
         
         $dataProvider = $searchModel->search([]);
         

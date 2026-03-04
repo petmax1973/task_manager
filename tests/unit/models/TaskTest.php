@@ -42,7 +42,13 @@ class TaskTest extends Unit
         $this->assertFalse($task->validate(['status']));
         
         // Valid statuses
+        $task->status = Task::STATUS_ACTIVE;
+        $this->assertTrue($task->validate(['status']));
+        
         $task->status = Task::STATUS_IN_PROGRESS;
+        $this->assertTrue($task->validate(['status']));
+        
+        $task->status = Task::STATUS_IN_REVIEW;
         $this->assertTrue($task->validate(['status']));
         
         $task->status = Task::STATUS_SUSPENDED;
@@ -79,7 +85,9 @@ class TaskTest extends Unit
 
     public function testStatusConstants()
     {
+        $this->assertEquals('active', Task::STATUS_ACTIVE);
         $this->assertEquals('in_progress', Task::STATUS_IN_PROGRESS);
+        $this->assertEquals('in_review', Task::STATUS_IN_REVIEW);
         $this->assertEquals('suspended', Task::STATUS_SUSPENDED);
         $this->assertEquals('to_release', Task::STATUS_TO_RELEASE);
         $this->assertEquals('completed', Task::STATUS_COMPLETED);
@@ -90,8 +98,10 @@ class TaskTest extends Unit
         $statusList = Task::getStatusList();
         
         $this->assertIsArray($statusList);
-        $this->assertCount(4, $statusList);
+        $this->assertCount(6, $statusList);
+        $this->assertArrayHasKey(Task::STATUS_ACTIVE, $statusList);
         $this->assertArrayHasKey(Task::STATUS_IN_PROGRESS, $statusList);
+        $this->assertArrayHasKey(Task::STATUS_IN_REVIEW, $statusList);
         $this->assertArrayHasKey(Task::STATUS_SUSPENDED, $statusList);
         $this->assertArrayHasKey(Task::STATUS_TO_RELEASE, $statusList);
         $this->assertArrayHasKey(Task::STATUS_COMPLETED, $statusList);

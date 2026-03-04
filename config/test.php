@@ -36,18 +36,9 @@ return [
         'urlManager' => [
             'showScriptName' => true,
         ],
-        'user' => [
-            'identityClass' => 'app\models\User',
-        ],
         'request' => [
-            'cookieValidationKey' => 'test',
+            'cookieValidationKey' => 'test-secret-key',
             'enableCsrfValidation' => false,
-            // but if you absolutely need it set cookie domain to localhost
-            /*
-            'csrfCookie' => [
-                'domain' => 'localhost',
-            ],
-            */
         ],
     ],
     'params' => $params,
