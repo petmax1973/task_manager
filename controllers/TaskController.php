@@ -200,6 +200,33 @@ class TaskController extends Controller
      */
     public function actionDeleteAttachment($id)
     {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            
+            try {
+                $attachment = TaskAttachment::findOne($id);
+                if ($attachment === null) {
+                    Yii::$app->response->setStatusCode(404);
+                    return ['success' => false, 'message' => 'Attachment not found'];
+                }
+
+                $taskId = $attachment->task_id;
+                $filePath = $attachment->getFilePath();
+
+                if ($attachment->delete()) {
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                    return ['success' => true, 'message' => Yii::t('app', 'File deleted successfully.')];
+                } else {
+                    return ['success' => false, 'message' => 'Failed to delete attachment'];
+                }
+            } catch (\Exception $e) {
+                return ['success' => false, 'message' => $e->getMessage()];
+            }
+        }
+        
+        // Non-AJAX request handling
         $attachment = TaskAttachment::findOne($id);
         if ($attachment === null) {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
@@ -261,22 +288,26 @@ class TaskController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         
-        if (Yii::$app->request->isAjax) {
+        if (!Yii::$app->request->isAjax) {
+            return ['success' => false, 'message' => 'Invalid request'];
+        }
+        
+        try {
             $id = Yii::$app->request->post('id');
             $status = Yii::$app->request->post('status');
             
             $task = $this->findModel($id);
-            if ($task) {
-                $task->status = $status;
-                if ($task->save()) {
-                    return ['success' => true, 'message' => 'Status updated successfully'];
-                } else {
-                    return ['success' => false, 'message' => 'Failed to update status', 'errors' => $task->errors];
-                }
+            $task->status = $status;
+            
+            if ($task->save()) {
+                return ['success' => true, 'message' => 'Status updated successfully'];
+            } else {
+                return ['success' => false, 'message' => 'Failed to update status', 'errors' => $task->errors];
             }
+        } catch (\yii\web\NotFoundHttpException $e) {
+            Yii::$app->response->setStatusCode(404);
+            return ['success' => false, 'message' => 'Task not found'];
         }
-        
-        return ['success' => false, 'message' => 'Invalid request'];
     }
 
     /**
@@ -287,22 +318,26 @@ class TaskController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (Yii::$app->request->isAjax) {
+        if (!Yii::$app->request->isAjax) {
+            return ['success' => false, 'message' => 'Invalid request'];
+        }
+        
+        try {
             $id = Yii::$app->request->post('id');
             $assignedTo = Yii::$app->request->post('assigned_to');
 
             $task = $this->findModel($id);
-            if ($task) {
-                $task->assigned_to = $assignedTo ?: null;
-                if ($task->save()) {
-                    return ['success' => true, 'message' => 'Assignee updated successfully'];
-                } else {
-                    return ['success' => false, 'message' => 'Failed to update assignee', 'errors' => $task->errors];
-                }
+            $task->assigned_to = $assignedTo ?: null;
+            
+            if ($task->save()) {
+                return ['success' => true, 'message' => 'Assignee updated successfully'];
+            } else {
+                return ['success' => false, 'message' => 'Failed to update assignee', 'errors' => $task->errors];
             }
+        } catch (\yii\web\NotFoundHttpException $e) {
+            Yii::$app->response->setStatusCode(404);
+            return ['success' => false, 'message' => 'Task not found'];
         }
-
-        return ['success' => false, 'message' => 'Invalid request'];
     }
 
     /**
@@ -314,7 +349,12 @@ class TaskController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Task::findOne($id)) !== null) {
+        // Validate that id is a positive integer
+        if (!is_numeric($id) || $id <= 0 || $id != (int)$id) {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        
+        if (($model = Task::findOne((int)$id)) !== null) {
             return $model;
         }
 

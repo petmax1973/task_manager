@@ -15,6 +15,9 @@ return [
     'language' => 'it-IT',
     'components' => [
         'db' => $db,
+        'errorHandler' => [
+            'errorAction' => null,
+        ],
         'i18n' => [
             'translations' => [
                 'app*' => [

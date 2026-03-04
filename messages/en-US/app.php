@@ -14,7 +14,7 @@ return [
     'To Release' => 'To Release',
     'Completed' => 'Completed',
     'Tasks' => 'Tasks',
-    'Create Task' => 'Create Task',
+    'Create Task' => 'New Issue',
     'Update Task: {name}' => 'Update Task: {name}',
     'Update' => 'Update',
     'Save' => 'Save',

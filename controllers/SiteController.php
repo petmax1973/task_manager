@@ -42,7 +42,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect(['task/index']);
     }
 
 
@@ -55,6 +55,25 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    /**
+     * Displays contact page.
+     *
+     * @return string
+     */
+    public function actionContact()
+    {
+        $model = new \yii\base\DynamicModel(['name', 'email', 'subject', 'body']);
+        $model->addRule(['name', 'email', 'subject', 'body'], 'required');
+        $model->addRule('email', 'email');
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            Yii::$app->session->setFlash('success', 'Thank you for your message.');
+            return $this->refresh();
+        }
+        
+        return $this->render('contact', ['model' => $model]);
     }
 
     /**
