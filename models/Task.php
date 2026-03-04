@@ -6,6 +6,8 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use app\models\Assignee;
+use app\models\Project;
+use app\models\Status;
 
 /**
  * This is the model class for table "task".
@@ -28,11 +30,6 @@ class Task extends ActiveRecord
     const STATUS_SUSPENDED = 'suspended';
     const STATUS_TO_RELEASE = 'to_release';
     const STATUS_COMPLETED = 'completed';
-
-    const PROJECT_ZOTSELL = 'zotsell';
-    const PROJECT_HELP = 'help';
-    const PROJECT_MAGENTO = 'magento';
-    const PROJECT_EBIKE = 'ebike';
 
     /**
      * {@inheritdoc}
@@ -64,24 +61,12 @@ class Task extends ActiveRecord
             [['gitlab_issue'], 'string', 'max' => 500],
             [['gitlab_issue'], 'url'],
             [['status'], 'string', 'max' => 20],
-            [['status'], 'in', 'range' => [
-                self::STATUS_ACTIVE,
-                self::STATUS_IN_PROGRESS,
-                self::STATUS_IN_REVIEW,
-                self::STATUS_SUSPENDED,
-                self::STATUS_TO_RELEASE,
-                self::STATUS_COMPLETED
-            ]],
+            [['status'], 'in', 'range' => array_keys(Status::getList())],
             [['status'], 'default', 'value' => self::STATUS_IN_PROGRESS],
             [['priority'], 'integer', 'min' => 1, 'max' => 5],
             [['priority'], 'default', 'value' => 1],
             [['project'], 'string', 'max' => 50],
-            [['project'], 'in', 'range' => [
-                self::PROJECT_ZOTSELL,
-                self::PROJECT_HELP,
-                self::PROJECT_MAGENTO,
-                self::PROJECT_EBIKE,
-            ]],
+            [['project'], 'in', 'range' => array_keys(Project::getList())],
         ];
     }
 
@@ -110,14 +95,7 @@ class Task extends ActiveRecord
      */
     public static function getStatusList()
     {
-        return [
-            self::STATUS_ACTIVE => Yii::t('app', 'Active'),
-            self::STATUS_IN_PROGRESS => Yii::t('app', 'In Progress'),
-            self::STATUS_IN_REVIEW => Yii::t('app', 'In Review'),
-            self::STATUS_SUSPENDED => Yii::t('app', 'Suspended'),
-            self::STATUS_TO_RELEASE => Yii::t('app', 'To Release'),
-            self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
-        ];
+        return Status::getList();
     }
 
     /**
@@ -138,12 +116,7 @@ class Task extends ActiveRecord
      */
     public static function getProjectList()
     {
-        return [
-            self::PROJECT_ZOTSELL => 'Zotsell',
-            self::PROJECT_HELP => 'Help',
-            self::PROJECT_MAGENTO => 'Magento',
-            self::PROJECT_EBIKE => 'eBike',
-        ];
+        return Project::getList();
     }
 
     /**

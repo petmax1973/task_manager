@@ -58,6 +58,14 @@ $currentTheme = Yii::$app->request->cookies->getValue('theme', 'light');
                     ['label' => 'English', 'url' => ['/site/language', 'lang' => 'en-US']],
                 ],
             ],
+            [
+                'label' => '<i class="fas fa-cog"></i>',
+                'url' => ['/settings/index'],
+                'encode' => false,
+                'options' => [
+                    'title' => Yii::t('app', 'Settings'),
+                ],
+            ],
         ],
     ]);
     NavBar::end();

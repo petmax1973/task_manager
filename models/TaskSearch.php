@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
+use app\models\Status;
 
 /**
  * TaskSearch represents the model behind the search form of `app\models\Task`.
@@ -50,8 +51,8 @@ class TaskSearch extends Task
             'sort' => [
                 'attributes' => [
                     'status' => [
-                        'asc' => new Expression("FIELD(status, 'active', 'to_release', 'in_progress', 'in_review', 'suspended', 'completed')"),
-                        'desc' => new Expression("FIELD(status, 'completed', 'suspended', 'in_review', 'in_progress', 'to_release', 'active')"),
+                        'asc' => self::buildStatusFieldExpression('asc'),
+                        'desc' => self::buildStatusFieldExpression('desc'),
                     ],
                     'priority',
                     'title',
@@ -98,5 +99,22 @@ class TaskSearch extends Task
         }
 
         return $dataProvider;
+    }
+
+    /**
+     * Builds a FIELD() expression for status sorting based on the status table.
+     * @param string $direction 'asc' or 'desc'
+     * @return Expression
+     */
+    protected static function buildStatusFieldExpression($direction)
+    {
+        $slugs = Status::getOrderedSlugs();
+        if ($direction === 'desc') {
+            $slugs = array_reverse($slugs);
+        }
+        $quoted = array_map(function ($s) {
+            return "'" . addslashes($s) . "'";
+        }, $slugs);
+        return new Expression("FIELD(status, " . implode(', ', $quoted) . ")");
     }
 }

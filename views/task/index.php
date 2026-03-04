@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\Task;
 use app\models\Assignee;
+use app\models\Status;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TaskSearch */
@@ -13,6 +14,8 @@ use app\models\Assignee;
 
 //$this->title = Yii::t('app', 'Tasks');
 // Remove breadcrumb - we don't want Home / Tasks navigation
+
+$statusColors = Status::getColorMap();
 ?>
 <div class="task-index">
 
@@ -33,28 +36,8 @@ use app\models\Assignee;
             [
                 'attribute' => 'title',
                 'format' => 'raw',
-                'value' => function ($model) {
-                    $color = 'black';
-                    switch ($model->status) {
-                        case Task::STATUS_ACTIVE:
-                            $color = '#007bff'; // Blue
-                            break;
-                        case Task::STATUS_TO_RELEASE:
-                            $color = 'red';
-                            break;
-                        case Task::STATUS_IN_PROGRESS:
-                            $color = 'green';
-                            break;
-                        case Task::STATUS_IN_REVIEW:
-                            $color = '#FF8C00'; // Orange
-                            break;
-                        case Task::STATUS_SUSPENDED:
-                            $color = '#999'; // Light gray
-                            break;
-                        case Task::STATUS_COMPLETED:
-                            $color = 'black';
-                            break;
-                    }
+                'value' => function ($model) use ($statusColors) {
+                    $color = isset($statusColors[$model->status]) ? $statusColors[$model->status] : 'black';
                     $titleHtml = Html::a(Html::encode($model->title), ['view', 'id' => $model->id], ['style' => 'color: ' . $color]);
 
                     $desc = trim($model->description);
@@ -76,7 +59,7 @@ use app\models\Assignee;
             [
                 'attribute' => 'assigned_to',
                 'format' => 'raw',
-                'value' => function ($model) {
+                'value' => function ($model) use ($statusColors) {
                     $assignees = \app\models\Assignee::getList();
                     $dropdownOptions = '<option value="" style="text-align: center;">-</option>';
                     foreach ($assignees as $name) {
@@ -84,14 +67,7 @@ use app\models\Assignee;
                         $dropdownOptions .= '<option value="' . Html::encode($name) . '"' . $selected . '>' . Html::encode($name) . '</option>';
                     }
 
-                    $colors = [
-                        Task::STATUS_TO_RELEASE => 'red',
-                        Task::STATUS_IN_PROGRESS => 'green',
-                        Task::STATUS_IN_REVIEW => '#FF8C00',
-                        Task::STATUS_SUSPENDED => '#999',
-                        Task::STATUS_COMPLETED => 'black',
-                    ];
-                    $currentColor = isset($colors[$model->status]) ? $colors[$model->status] : 'black';
+                    $currentColor = isset($statusColors[$model->status]) ? $statusColors[$model->status] : 'black';
 
                     return '<select class="form-control assignee-dropdown" data-id="' . $model->id . '" style="border: none; background: transparent; font-weight: bold; color: ' . $currentColor . '; width: 100%; min-width: 120px;">'
                         . $dropdownOptions . '</select>';
@@ -107,48 +83,19 @@ use app\models\Assignee;
                         'allowClear' => true,
                     ],
                 ]),
-                'contentOptions' => function ($model, $key, $index, $column) {
-                    $color = 'black';
-                    switch ($model->status) {
-                        case Task::STATUS_ACTIVE:
-                            $color = '#007bff';
-                            break;
-                        case Task::STATUS_TO_RELEASE:
-                            $color = 'red';
-                            break;
-                        case Task::STATUS_IN_PROGRESS:
-                            $color = 'green';
-                            break;
-                        case Task::STATUS_IN_REVIEW:
-                            $color = '#FF8C00';
-                            break;
-                        case Task::STATUS_SUSPENDED:
-                            $color = '#999';
-                            break;
-                        case Task::STATUS_COMPLETED:
-                            $color = 'black';
-                            break;
-                    }
+                'contentOptions' => function ($model, $key, $index, $column) use ($statusColors) {
+                    $color = isset($statusColors[$model->status]) ? $statusColors[$model->status] : 'black';
                     return ['style' => 'color: ' . $color];
                 },
             ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => function ($model) {
+                'value' => function ($model) use ($statusColors) {
                     $options = Task::getStatusList();
                     $dropdownOptions = '';
-                    
-                    // Mappa dei colori per gli stati
-                    $colors = [
-                        Task::STATUS_TO_RELEASE => 'red',
-                        Task::STATUS_IN_PROGRESS => 'green', 
-                        Task::STATUS_IN_REVIEW => '#FF8C00',
-                        Task::STATUS_SUSPENDED => '#999',
-                        Task::STATUS_COMPLETED => 'black',
-                    ];
-                    
-                    $currentColor = isset($colors[$model->status]) ? $colors[$model->status] : 'black';
+
+                    $currentColor = isset($statusColors[$model->status]) ? $statusColors[$model->status] : 'black';
                     
                     foreach ($options as $key => $value) {
                         $selected = ($model->status == $key) ? ' selected' : '';
@@ -171,28 +118,8 @@ use app\models\Assignee;
                         //'width' => '100%',
                     ],
                 ]),
-                'contentOptions' => function ($model, $key, $index, $column) {
-                    $color = 'black';
-                    switch ($model->status) {
-                        case Task::STATUS_ACTIVE:
-                            $color = '#007bff';
-                            break;
-                        case Task::STATUS_TO_RELEASE:
-                            $color = 'red';
-                            break;
-                        case Task::STATUS_IN_PROGRESS:
-                            $color = 'green';
-                            break;
-                        case Task::STATUS_IN_REVIEW:
-                            $color = '#FF8C00'; // Orange
-                            break;
-                        case Task::STATUS_SUSPENDED:
-                            $color = '#999'; // Light gray
-                            break;
-                        case Task::STATUS_COMPLETED:
-                            $color = 'black';
-                            break;
-                    }
+                'contentOptions' => function ($model, $key, $index, $column) use ($statusColors) {
+                    $color = isset($statusColors[$model->status]) ? $statusColors[$model->status] : 'black';
                     return ['style' => 'color: ' . $color];
                 },
             ],
@@ -316,15 +243,8 @@ $('.status-dropdown').on('change', function() {
     var newStatus = $(this).val();
     var dropdown = $(this);
     
-    // Mappa dei colori
-    var statusColors = {
-        'active': '#007bff',
-        'to_release': 'red',
-        'in_progress': 'green',
-        'in_review': '#FF8C00',
-        'suspended': '#999',
-        'completed': 'black'
-    };
+    // Mappa dei colori (from DB)
+    var statusColors = " . json_encode($statusColors) . ";
     
     // Aggiorna immediatamente il colore
     dropdown.css('color', statusColors[newStatus] || 'black');
