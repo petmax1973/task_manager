@@ -30,9 +30,7 @@ $statusColors = Status::getColorMap();
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
+            'id',
             [
                 'attribute' => 'title',
                 'format' => 'raw',
@@ -139,10 +137,16 @@ $statusColors = Status::getColorMap();
                             ]
                         );
                     }
+                    $icons = '';
+                    if (!empty($model->related_tasks)) {
+                        $icons .= '<div style="text-align: center;"><span title="' . Yii::t('app', 'Related Tasks') . '"><i class="fas fa-link"></i></span></div>';
+                    }
                     if (!empty($model->attachments)) {
                         $count = count($model->attachments);
-                        $html .= ' <span class="attachment-icon" title="' . $count . ' ' . Yii::t('app', 'attachment(s)') . '">'
-                            . '<i class="fas fa-paperclip"></i></span>';
+                        $icons .= '<div style="text-align: center;"><span title="' . $count . ' ' . Yii::t('app', 'attachment(s)') . '"><i class="fas fa-paperclip"></i></span></div>';
+                    }
+                    if ($icons) {
+                        $html .= ' <span style="display: inline-block; vertical-align: middle; line-height: 1.6; min-width: 20px; margin-left: 8px;">' . $icons . '</span>';
                     }
                     return $html;
                 },

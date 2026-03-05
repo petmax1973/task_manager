@@ -56,6 +56,25 @@ $this->title = $model->title;
                 }
             ],
             [
+                'attribute' => 'related_tasks',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $tasks = $model->getRelatedTaskModels();
+                    if (empty($tasks)) {
+                        return '<span class="not-set">' . Yii::t('app', '(not set)') . '</span>';
+                    }
+                    $links = [];
+                    foreach ($tasks as $task) {
+                        $links[] = Html::a(
+                            '#' . $task->id . ' - ' . Html::encode($task->title),
+                            ['view', 'id' => $task->id],
+                            ['class' => 'btn btn-sm btn-info', 'style' => 'margin: 2px;']
+                        );
+                    }
+                    return implode(' ', $links);
+                },
+            ],
+            [
                 'attribute' => 'gitlab_issue',
                 'format' => 'raw',
                 'value' => function ($model) {

@@ -60,4 +60,10 @@ return [
     'Name (IT)' => 'Name (IT)',
     'Name (EN)' => 'Name (EN)',
     'At least one name (IT or EN) is required.' => 'At least one name (IT or EN) is required.',
+    'Related Tasks' => 'Related Tasks',
+    'e.g. 12, 8, 15' => 'e.g. 12, 8, 15',
+    'Enter task IDs separated by commas' => 'Enter task IDs separated by commas',
+    'Related Tasks must contain only numeric IDs separated by commas.' => 'Related Tasks must contain only numeric IDs separated by commas.',
+    'A task cannot reference itself.' => 'A task cannot reference itself.',
+    'One or more referenced tasks do not exist.' => 'One or more referenced tasks do not exist.',
 ];

@@ -67,6 +67,8 @@ class Task extends ActiveRecord
             [['priority'], 'default', 'value' => 1],
             [['project'], 'string', 'max' => 50],
             [['project'], 'in', 'range' => array_keys(Project::getList())],
+            [['related_tasks'], 'string', 'max' => 255],
+            [['related_tasks'], 'validateRelatedTasks'],
         ];
     }
 
@@ -86,6 +88,7 @@ class Task extends ActiveRecord
             'priority' => Yii::t('app', 'Priority'),
             'gitlab_issue' => Yii::t('app', 'GitLab Issue'),
             'project' => Yii::t('app', 'Project'),
+            'related_tasks' => Yii::t('app', 'Related Tasks'),
         ];
     }
 
@@ -142,6 +145,45 @@ class Task extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    /**
+     * Validates that related_tasks contains valid, existing task IDs
+     */
+    public function validateRelatedTasks($attribute)
+    {
+        if (empty($this->$attribute)) {
+            return;
+        }
+        $ids = array_map('trim', explode(',', $this->$attribute));
+        foreach ($ids as $id) {
+            if (!ctype_digit($id)) {
+                $this->addError($attribute, Yii::t('app', 'Related Tasks must contain only numeric IDs separated by commas.'));
+                return;
+            }
+            if ((int)$id === $this->id) {
+                $this->addError($attribute, Yii::t('app', 'A task cannot reference itself.'));
+                return;
+            }
+        }
+        $ids = array_map('intval', $ids);
+        $existingCount = static::find()->where(['id' => $ids])->count();
+        if ($existingCount != count($ids)) {
+            $this->addError($attribute, Yii::t('app', 'One or more referenced tasks do not exist.'));
+        }
+    }
+
+    /**
+     * Returns related task models
+     * @return Task[]
+     */
+    public function getRelatedTaskModels()
+    {
+        if (empty($this->related_tasks)) {
+            return [];
+        }
+        $ids = array_map('intval', array_map('trim', explode(',', $this->related_tasks)));
+        return static::find()->where(['id' => $ids])->all();
+    }
+
     public function getAttachments()
     {
         return $this->hasMany(TaskAttachment::class, ['task_id' => 'id']);

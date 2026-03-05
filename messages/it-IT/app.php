@@ -60,4 +60,10 @@ return [
     'Name (IT)' => 'Nome (IT)',
     'Name (EN)' => 'Nome (EN)',
     'At least one name (IT or EN) is required.' => 'Almeno un nome (IT o EN) è obbligatorio.',
+    'Related Tasks' => 'Task Correlati',
+    'e.g. 12, 8, 15' => 'es. 12, 8, 15',
+    'Enter task IDs separated by commas' => 'Inserisci gli ID dei task separati da virgola',
+    'Related Tasks must contain only numeric IDs separated by commas.' => 'I Task Correlati devono contenere solo ID numerici separati da virgola.',
+    'A task cannot reference itself.' => 'Un task non può riferirsi a se stesso.',
+    'One or more referenced tasks do not exist.' => 'Uno o più task referenziati non esistono.',
 ];
