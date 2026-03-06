@@ -17,7 +17,28 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 26]) ?>
+    <?= $form->field($model, 'description')->textarea(['rows' => 26, 'id' => 'markdown-editor']) ?>
+
+    <?php
+    $this->registerJs("
+        if (typeof EasyMDE !== 'undefined') {
+            var easyMDE = new EasyMDE({
+                element: document.getElementById('markdown-editor'),
+                spellChecker: false,
+                minHeight: '400px',
+                status: ['lines', 'words'],
+                toolbar: [
+                    'bold', 'italic', 'heading', '|',
+                    'unordered-list', 'ordered-list', 'checklist', '|',
+                    'code', 'quote', 'link', 'image', 'table', '|',
+                    'horizontal-rule', '|',
+                    'preview', 'side-by-side', 'fullscreen', '|',
+                    'guide'
+                ],
+            });
+        }
+    ", \yii\web\View::POS_READY);
+    ?>
 
     <?= $form->field($model, 'assigned_to')->widget(Select2::class, [
         'data' => Assignee::getList(),

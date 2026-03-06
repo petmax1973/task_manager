@@ -34,8 +34,18 @@ $this->title = $model->title;
             'title',
             [
                 'attribute' => 'description',
-                'format' => 'ntext',
-                'visible' => true,
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if (empty($model->description)) {
+                        return '<span class="not-set">' . Yii::t('app', '(not set)') . '</span>';
+                    }
+                    $parser = new \cebe\markdown\GithubMarkdown();
+                    $parser->html5 = true;
+                    $parser->enableNewlines = true;
+                    return '<div class="markdown-body">'
+                        . \yii\helpers\HtmlPurifier::process($parser->parse($model->description))
+                        . '</div>';
+                },
             ],
             [
                 'attribute' => 'project',
@@ -174,6 +184,8 @@ $this->title = $model->title;
         <?= Html::endForm() ?>
     </div>
 
+<button id="scroll-to-top" title="<?= Yii::t('app', 'Back to top') ?>"><i class="fas fa-arrow-up"></i></button>
+
 </div>
 
 <?php
@@ -187,6 +199,19 @@ $('#attachmentFiles').on('change', function() {
     } else if (files.length === 1) {
         label.text(files[0].name);
     }
+});
+
+// Scroll to top button
+var scrollBtn = $('#scroll-to-top');
+$(window).on('scroll', function() {
+    if ($(this).scrollTop() > 300) {
+        scrollBtn.fadeIn(200);
+    } else {
+        scrollBtn.fadeOut(200);
+    }
+});
+scrollBtn.on('click', function() {
+    $('html, body').animate({scrollTop: 0}, 300);
 });
 ", \yii\web\View::POS_READY);
 ?>

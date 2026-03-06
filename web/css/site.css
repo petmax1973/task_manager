@@ -536,3 +536,239 @@ body.theme-dark .custom-file-label::after {
     border-color: var(--input-border) !important;
     color: var(--text-color) !important;
 }
+
+/* ==========================================
+   MARKDOWN RENDERED CONTENT
+   ========================================== */
+
+.markdown-body {
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.markdown-body h1 { font-size: 1.6em; }
+.markdown-body h2 { font-size: 1.4em; }
+.markdown-body h3 { font-size: 1.2em; }
+
+.markdown-body p {
+    margin-bottom: 0.7em;
+}
+
+.markdown-body code {
+    padding: 0.2em 0.4em;
+    font-size: 85%;
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 4px;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.markdown-body pre {
+    padding: 12px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.markdown-body pre code {
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+.markdown-body blockquote {
+    padding: 0 1em;
+    border-left: 4px solid var(--border-color);
+    margin: 0.5em 0;
+    color: #656d76;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+    padding-left: 2em;
+    margin-bottom: 0.7em;
+}
+
+.markdown-body table {
+    border-collapse: collapse;
+    margin-bottom: 0.7em;
+    width: auto;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+    padding: 6px 13px;
+    border: 1px solid var(--border-color);
+}
+
+.markdown-body table th {
+    font-weight: 600;
+    background-color: rgba(175, 184, 193, 0.1);
+}
+
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+.markdown-body hr {
+    border: none;
+    border-top: 2px solid var(--border-color);
+    margin: 1em 0;
+}
+
+/* Dark theme overrides for markdown */
+body.theme-dark .markdown-body pre {
+    background-color: #141820;
+    border-color: #30363d;
+}
+
+body.theme-dark .markdown-body code {
+    background-color: rgba(110, 118, 129, 0.25);
+    color: #b0b8c4;
+}
+
+body.theme-dark .markdown-body blockquote {
+    color: #7a8595;
+    border-left-color: #30363d;
+}
+
+body.theme-dark .markdown-body table th {
+    background-color: rgba(110, 118, 129, 0.1);
+}
+
+body.theme-dark .markdown-body h1,
+body.theme-dark .markdown-body h2,
+body.theme-dark .markdown-body h3,
+body.theme-dark .markdown-body h4,
+body.theme-dark .markdown-body h5,
+body.theme-dark .markdown-body h6 {
+    color: #c9d1d9 !important;
+}
+
+body.theme-dark .markdown-body a {
+    color: #6a9ec4 !important;
+}
+
+/* Scroll to top button */
+#scroll-to-top {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background-color: #6c757d;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+#scroll-to-top:hover {
+    opacity: 1;
+}
+
+body.theme-dark #scroll-to-top {
+    background-color: #3a4150;
+}
+
+/* Hide Yii debug toolbar toggle button */
+.yii-debug-toolbar__bar {
+    display: none !important;
+}
+#yii-debug-toolbar {
+    display: none !important;
+}
+
+/* EasyMDE dark theme support */
+body.theme-dark .EasyMDEContainer .CodeMirror {
+    background-color: #1c2028 !important;
+    color: #b0b8c4 !important;
+    border-color: var(--input-border) !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-scroll {
+    background-color: #1c2028 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-sizer,
+body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-gutter,
+body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-gutters,
+body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-linenumber {
+    background-color: #1c2028 !important;
+    color: #6a737d !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-toolbar {
+    background-color: #1a1f27 !important;
+    border-color: var(--input-border) !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-toolbar button {
+    color: #8b949e !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-toolbar button:hover,
+body.theme-dark .EasyMDEContainer .editor-toolbar button.active {
+    background-color: #2a3040 !important;
+    color: #c9d1d9 !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-toolbar i.separator {
+    border-left-color: #30363d !important;
+    border-right-color: #30363d !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-statusbar {
+    color: #6a737d !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-preview,
+body.theme-dark .EasyMDEContainer .editor-preview-side {
+    background-color: #1c2028 !important;
+    color: #b0b8c4 !important;
+}
+
+body.theme-dark .EasyMDEContainer .editor-preview pre,
+body.theme-dark .EasyMDEContainer .editor-preview-side pre {
+    background-color: #141820 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror-cursor {
+    border-left-color: #b0b8c4 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror-selected {
+    background-color: #2a3040 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror .cm-header {
+    color: #c9d1d9 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror .cm-link,
+body.theme-dark .EasyMDEContainer .CodeMirror .cm-url {
+    color: #6a9ec4 !important;
+}
+
+body.theme-dark .EasyMDEContainer .CodeMirror .cm-comment {
+    color: #7a8595 !important;
+}

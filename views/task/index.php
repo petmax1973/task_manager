@@ -40,7 +40,22 @@ $statusColors = Status::getColorMap();
 
                     $desc = trim($model->description);
                     if (!empty($desc)) {
-                        $descText = Html::encode($desc);
+                        // Strip markdown syntax for preview
+                        $descText = preg_replace([
+                            '/^#{1,6}\s+/m',        // headings
+                            '/\*\*(.+?)\*\*/',       // bold
+                            '/\*(.+?)\*/',            // italic
+                            '/`{1,3}[^`]*`{1,3}/',   // inline code
+                            '/\[([^\]]+)\]\([^)]+\)/', // links -> keep text
+                            '/^[\s]*[-*+]\s+/m',      // list items
+                            '/^>\s+/m',               // blockquotes
+                            '/!\[([^\]]*)\]\([^)]+\)/', // images
+                            '/^---+$/m',              // horizontal rules
+                            '/\|/m',                  // table pipes
+                        ], [
+                            '', '$1', '$1', '', '$1', '', '', '$1', '', ' ',
+                        ], $desc);
+                        $descText = Html::encode(trim($descText));
                         $titleHtml .= '<div class="task-description-preview" style="color: ' . $color . ';">' . $descText . '</div>';
                     }
 
