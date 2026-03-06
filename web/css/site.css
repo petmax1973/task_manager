@@ -717,6 +717,18 @@ body.theme-dark .EasyMDEContainer .CodeMirror .CodeMirror-linenumber {
     color: #6a737d !important;
 }
 
+/* Editor toolbar: tutte le icone su una riga */
+.EasyMDEContainer .editor-toolbar {
+    white-space: nowrap;
+    overflow-x: auto;
+    padding: 5px 10px;
+}
+
+.EasyMDEContainer .editor-toolbar button.table {
+    width: auto !important;
+    display: inline-block !important;
+}
+
 body.theme-dark .EasyMDEContainer .editor-toolbar {
     background-color: #1a1f27 !important;
     border-color: var(--input-border) !important;
