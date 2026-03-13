@@ -42,6 +42,7 @@ return [
     '{count} file(s) uploaded successfully.' => '{count} file(s) uploaded successfully.',
     'File deleted successfully.' => 'File deleted successfully.',
     'File not found.' => 'File not found.',
+    'View' => 'View',
     'Are you sure you want to delete this file?' => 'Are you sure you want to delete this file?',
     'attachment(s)' => 'attachment(s)',
     'Project' => 'Project',

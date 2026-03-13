@@ -174,6 +174,29 @@ class TaskController extends Controller
     }
 
     /**
+     * View an attachment inline in the browser.
+     * @param integer $id Attachment ID
+     * @return mixed
+     */
+    public function actionViewAttachment($id)
+    {
+        $attachment = TaskAttachment::findOne($id);
+        if ($attachment === null) {
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+
+        $filePath = $attachment->getFilePath();
+        if (!file_exists($filePath)) {
+            throw new NotFoundHttpException(Yii::t('app', 'File not found.'));
+        }
+
+        return Yii::$app->response->sendFile($filePath, $attachment->original_name, [
+            'inline' => true,
+            'mimeType' => $attachment->mime_type,
+        ]);
+    }
+
+    /**
      * Download an attachment.
      * @param integer $id Attachment ID
      * @return mixed

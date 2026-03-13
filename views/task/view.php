@@ -126,7 +126,7 @@ $this->title = $model->title;
                     <th><?= Yii::t('app', 'File Name') ?></th>
                     <th><?= Yii::t('app', 'Size') ?></th>
                     <th><?= Yii::t('app', 'Uploaded At') ?></th>
-                    <th style="width: 150px;"><?= Yii::t('app', 'Actions') ?></th>
+                    <th style="width: 220px;"><?= Yii::t('app', 'Actions') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -139,6 +139,11 @@ $this->title = $model->title;
                     <td><?= $attachment->getFormattedSize() ?></td>
                     <td><?= Yii::$app->formatter->asDatetime($attachment->created_at) ?></td>
                     <td>
+                        <?= Html::a(
+                            '<i class="fas fa-eye"></i> ' . Yii::t('app', 'View'),
+                            ['view-attachment', 'id' => $attachment->id],
+                            ['class' => 'btn btn-sm btn-success', 'target' => '_blank']
+                        ) ?>
                         <?= Html::a(
                             '<i class="fas fa-download"></i> ' . Yii::t('app', 'Download'),
                             ['download-attachment', 'id' => $attachment->id],
