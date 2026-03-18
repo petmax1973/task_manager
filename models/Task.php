@@ -188,4 +188,85 @@ class Task extends ActiveRecord
     {
         return $this->hasMany(TaskAttachment::class, ['task_id' => 'id']);
     }
+
+    /**
+     * Parses the related_tasks string into an array of integer IDs.
+     * @return int[]
+     */
+    public function parseRelatedIds()
+    {
+        if (empty($this->related_tasks)) {
+            return [];
+        }
+        return array_map('intval', array_filter(array_map('trim', explode(',', $this->related_tasks)), 'strlen'));
+    }
+
+    /**
+     * Adds a related task ID to this task's related_tasks field (avoids duplicates).
+     * @param int $id
+     */
+    public function addRelatedTaskId($id)
+    {
+        $ids = $this->parseRelatedIds();
+        if (!in_array((int)$id, $ids)) {
+            $ids[] = (int)$id;
+            $this->related_tasks = implode(', ', $ids);
+            $this->save(false);
+        }
+    }
+
+    /**
+     * Removes a related task ID from this task's related_tasks field.
+     * @param int $id
+     */
+    public function removeRelatedTaskId($id)
+    {
+        $ids = $this->parseRelatedIds();
+        $ids = array_filter($ids, function ($v) use ($id) {
+            return $v !== (int)$id;
+        });
+        $this->related_tasks = empty($ids) ? null : implode(', ', $ids);
+        $this->save(false);
+    }
+
+    /**
+     * Syncs bidirectional relationships after save.
+     * Adds this task's ID to newly related tasks and removes it from unlinked tasks.
+     * @param int[] $oldIds IDs before the update
+     */
+    public function syncRelatedTasks($oldIds = [])
+    {
+        $newIds = $this->parseRelatedIds();
+
+        $added = array_diff($newIds, $oldIds);
+        $removed = array_diff($oldIds, $newIds);
+
+        foreach ($added as $relatedId) {
+            $relatedTask = static::findOne($relatedId);
+            if ($relatedTask) {
+                $relatedTask->addRelatedTaskId($this->id);
+            }
+        }
+
+        foreach ($removed as $relatedId) {
+            $relatedTask = static::findOne($relatedId);
+            if ($relatedTask) {
+                $relatedTask->removeRelatedTaskId($this->id);
+            }
+        }
+    }
+
+    /**
+     * Removes this task's ID from all related tasks (used before delete).
+     */
+    public function unlinkAllRelatedTasks()
+    {
+        $ids = $this->parseRelatedIds();
+        foreach ($ids as $relatedId) {
+            $relatedTask = static::findOne($relatedId);
+            if ($relatedTask) {
+                $relatedTask->removeRelatedTaskId($this->id);
+            }
+        }
+    }
 }

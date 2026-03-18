@@ -75,6 +75,7 @@ class TaskController extends Controller
         $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->syncRelatedTasks();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -93,8 +94,10 @@ class TaskController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $oldRelatedIds = $model->parseRelatedIds();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->syncRelatedTasks($oldRelatedIds);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -113,6 +116,9 @@ class TaskController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+
+        // Remove this task's ID from all related tasks
+        $model->unlinkAllRelatedTasks();
 
         // Delete physical files before deleting the task (FK CASCADE handles DB records)
         foreach ($model->attachments as $attachment) {
