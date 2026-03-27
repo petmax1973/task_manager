@@ -152,17 +152,23 @@ $this->title = $model->title;
                 <?php foreach ($model->attachments as $attachment): ?>
                 <tr>
                     <td>
-                        <i class="fas fa-file"></i>
+                        <i class="fas <?= $attachment->getFileIcon() ?>"></i>
                         <?= Html::encode($attachment->original_name) ?>
                     </td>
                     <td><?= $attachment->getFormattedSize() ?></td>
                     <td><?= Yii::$app->formatter->asDatetime($attachment->created_at) ?></td>
                     <td>
-                        <?= Html::a(
-                            '<i class="fas fa-eye"></i> ' . Yii::t('app', 'View'),
-                            ['view-attachment', 'id' => $attachment->id],
-                            ['class' => 'btn btn-sm btn-success', 'target' => '_blank']
-                        ) ?>
+                        <?php if ($attachment->isVideo()): ?>
+                            <button type="button" class="btn btn-sm btn-success toggle-video-btn" data-attachment-id="<?= $attachment->id ?>">
+                                <i class="fas fa-play"></i> <?= Yii::t('app', 'Play') ?>
+                            </button>
+                        <?php else: ?>
+                            <?= Html::a(
+                                '<i class="fas fa-eye"></i> ' . Yii::t('app', 'View'),
+                                ['view-attachment', 'id' => $attachment->id],
+                                ['class' => 'btn btn-sm btn-success', 'target' => '_blank']
+                            ) ?>
+                        <?php endif; ?>
                         <?= Html::a(
                             '<i class="fas fa-download"></i> ' . Yii::t('app', 'Download'),
                             ['download-attachment', 'id' => $attachment->id],
@@ -181,6 +187,16 @@ $this->title = $model->title;
                         ) ?>
                     </td>
                 </tr>
+                <?php if ($attachment->isVideo()): ?>
+                <tr class="video-player-row" id="video-row-<?= $attachment->id ?>" style="display: none;">
+                    <td colspan="4">
+                        <video controls preload="metadata" style="max-width: 100%; max-height: 480px;">
+                            <source src="<?= Yii::$app->urlManager->createUrl(['task/view-attachment', 'id' => $attachment->id]) ?>" type="<?= Html::encode($attachment->mime_type) ?>">
+                            <?= Yii::t('app', 'Your browser does not support the video tag.') ?>
+                        </video>
+                    </td>
+                </tr>
+                <?php endif; ?>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -222,6 +238,21 @@ $('#attachmentFiles').on('change', function() {
         label.text(files.length + ' " . Yii::t('app', 'files selected') . "');
     } else if (files.length === 1) {
         label.text(files[0].name);
+    }
+});
+
+// Toggle video player
+$('.toggle-video-btn').on('click', function() {
+    var id = $(this).data('attachment-id');
+    var row = $('#video-row-' + id);
+    var btn = $(this);
+    if (row.is(':visible')) {
+        row.hide();
+        row.find('video')[0].pause();
+        btn.html('<i class=\"fas fa-play\"></i> " . Yii::t('app', 'Play') . "');
+    } else {
+        row.show();
+        btn.html('<i class=\"fas fa-stop\"></i> " . Yii::t('app', 'Close') . "');
     }
 });
 

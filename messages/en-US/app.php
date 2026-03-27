@@ -75,4 +75,7 @@ return [
     'Tab {n}' => 'Tab {n}',
     '(not set)' => '(not set)',
     'Back to top' => 'Back to top',
+    'Play' => 'Play',
+    'Close' => 'Close',
+    'Your browser does not support the video tag.' => 'Your browser does not support the video tag.',
 ];

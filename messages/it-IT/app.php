@@ -75,4 +75,7 @@ return [
     'Tab {n}' => 'Tab {n}',
     '(not set)' => '(non impostato)',
     'Back to top' => 'Torna su',
+    'Play' => 'Riproduci',
+    'Close' => 'Chiudi',
+    'Your browser does not support the video tag.' => 'Il tuo browser non supporta la riproduzione video.',
 ];

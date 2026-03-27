@@ -98,4 +98,53 @@ class TaskAttachment extends ActiveRecord
     {
         return Yii::getAlias('@webroot/uploads/task-attachments/') . $this->stored_name;
     }
+
+    /**
+     * Check if the attachment is a video file.
+     * @return bool
+     */
+    public function isVideo()
+    {
+        return strpos($this->mime_type, 'video/') === 0;
+    }
+
+    /**
+     * Check if the attachment is an image file.
+     * @return bool
+     */
+    public function isImage()
+    {
+        return strpos($this->mime_type, 'image/') === 0;
+    }
+
+    /**
+     * Get the Font Awesome icon class based on file type.
+     * @return string
+     */
+    public function getFileIcon()
+    {
+        if ($this->isImage()) {
+            return 'fa-file-image';
+        }
+        if ($this->isVideo()) {
+            return 'fa-file-video';
+        }
+        if (strpos($this->mime_type, 'audio/') === 0) {
+            return 'fa-file-audio';
+        }
+        if (strpos($this->mime_type, 'application/pdf') === 0) {
+            return 'fa-file-pdf';
+        }
+        $ext = pathinfo($this->original_name, PATHINFO_EXTENSION);
+        if (in_array(strtolower($ext), ['doc', 'docx', 'odt'])) {
+            return 'fa-file-word';
+        }
+        if (in_array(strtolower($ext), ['xls', 'xlsx', 'ods'])) {
+            return 'fa-file-excel';
+        }
+        if (in_array(strtolower($ext), ['zip', 'rar', '7z', 'tar', 'gz'])) {
+            return 'fa-file-archive';
+        }
+        return 'fa-file';
+    }
 }
