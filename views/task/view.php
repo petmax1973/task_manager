@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
+use yii\bootstrap4\Tabs;
 use app\models\Task;
 
 /* @var $this yii\web\View */
@@ -32,21 +33,6 @@ $this->title = $model->title;
         'attributes' => [
             'id',
             'title',
-            [
-                'attribute' => 'description',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    if (empty($model->description)) {
-                        return '<span class="not-set">' . Yii::t('app', '(not set)') . '</span>';
-                    }
-                    $parser = new \cebe\markdown\GithubMarkdown();
-                    $parser->html5 = true;
-                    $parser->enableNewlines = true;
-                    return '<div class="markdown-body">'
-                        . \yii\helpers\HtmlPurifier::process($parser->parse($model->description))
-                        . '</div>';
-                },
-            ],
             [
                 'attribute' => 'project',
                 'value' => function ($model) {
@@ -114,6 +100,39 @@ $this->title = $model->title;
             'updated_at:datetime',
         ],
     ]) ?>
+
+    <!-- Description Tabs Section -->
+    <div class="task-description-tabs mb-4">
+    <?php
+    $descTabs = $model->descriptionTabs;
+    if (empty($descTabs)) {
+        echo '<h3>' . Yii::t('app', 'Description') . '</h3>';
+        echo '<p class="not-set">' . Yii::t('app', '(not set)') . '</p>';
+    } else {
+        $parser = new \cebe\markdown\GithubMarkdown();
+        $parser->html5 = true;
+        $parser->enableNewlines = true;
+
+        $items = [];
+        foreach ($descTabs as $i => $tab) {
+            $label = !empty($tab->title) ? Html::encode($tab->title) : Yii::t('app', 'Description');
+            $content = !empty($tab->content)
+                ? '<div class="markdown-body p-3">' . \yii\helpers\HtmlPurifier::process($parser->parse($tab->content)) . '</div>'
+                : '<div class="p-3"><span class="not-set">' . Yii::t('app', '(not set)') . '</span></div>';
+            $items[] = [
+                'label' => $label,
+                'content' => $content,
+                'active' => ($i === 0),
+            ];
+        }
+
+        echo Tabs::widget([
+            'items' => $items,
+            'options' => ['class' => 'nav-tabs-description'],
+        ]);
+    }
+    ?>
+    </div>
 
     <!-- Attachments Section -->
     <div class="task-attachments mt-4">

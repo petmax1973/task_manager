@@ -67,4 +67,12 @@ return [
     'Related Tasks must contain only numeric IDs separated by commas.' => 'I Task Correlati devono contenere solo ID numerici separati da virgola.',
     'A task cannot reference itself.' => 'Un task non può riferirsi a se stesso.',
     'One or more referenced tasks do not exist.' => 'Uno o più task referenziati non esistono.',
+    'Tab Title' => 'Titolo Tab',
+    'Content' => 'Contenuto',
+    'Description Tabs' => 'Tab Descrizione',
+    'Add Tab' => 'Aggiungi Tab',
+    'Remove Tab' => 'Rimuovi Tab',
+    'Tab {n}' => 'Tab {n}',
+    '(not set)' => '(non impostato)',
+    'Back to top' => 'Torna su',
 ];

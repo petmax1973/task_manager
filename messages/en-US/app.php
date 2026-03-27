@@ -67,4 +67,12 @@ return [
     'Related Tasks must contain only numeric IDs separated by commas.' => 'Related Tasks must contain only numeric IDs separated by commas.',
     'A task cannot reference itself.' => 'A task cannot reference itself.',
     'One or more referenced tasks do not exist.' => 'One or more referenced tasks do not exist.',
+    'Tab Title' => 'Tab Title',
+    'Content' => 'Content',
+    'Description Tabs' => 'Description Tabs',
+    'Add Tab' => 'Add Tab',
+    'Remove Tab' => 'Remove Tab',
+    'Tab {n}' => 'Tab {n}',
+    '(not set)' => '(not set)',
+    'Back to top' => 'Back to top',
 ];

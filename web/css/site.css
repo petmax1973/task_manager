@@ -663,6 +663,91 @@ body.theme-dark .markdown-body a {
     color: #6a9ec4 !important;
 }
 
+/* Description Tabs - seamlessly integrated with DetailView table */
+.task-description-tabs {
+    margin-top: 0;
+}
+
+/* Remove bottom border radius from DetailView table to merge with tabs */
+.task-view .table-striped {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.task-view .table-striped tr:last-child td,
+.task-view .table-striped tr:last-child th {
+    border-bottom: none;
+}
+
+.task-description-tabs .nav-tabs {
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    border-left: 1px solid var(--border-color, #dee2e6);
+    border-right: 1px solid var(--border-color, #dee2e6);
+    background-color: var(--table-hover, #f8f9fa);
+    padding: 0.4rem 0.5rem 0 0.5rem;
+}
+
+.task-description-tabs .nav-tabs .nav-link {
+    color: var(--text-color, #212529);
+    border: 1px solid transparent;
+    border-radius: 0.3rem 0.3rem 0 0;
+    padding: 0.5rem 1.2rem;
+    margin-bottom: -1px;
+    font-size: 0.95em;
+}
+
+.task-description-tabs .nav-tabs .nav-link:hover {
+    border-color: var(--border-color, #dee2e6) var(--border-color, #dee2e6) transparent;
+    background-color: var(--card-bg, #ffffff);
+}
+
+.task-description-tabs .nav-tabs .nav-link.active {
+    background-color: var(--card-bg, #ffffff);
+    color: var(--text-color, #212529);
+    border-color: var(--border-color, #dee2e6) var(--border-color, #dee2e6) var(--card-bg, #ffffff);
+    font-weight: 500;
+}
+
+.task-description-tabs .tab-content {
+    border: 1px solid var(--border-color, #dee2e6);
+    border-top: none;
+    background-color: var(--card-bg, #ffffff);
+}
+
+.task-description-tabs .tab-content > .tab-pane {
+    min-height: 80px;
+}
+
+/* Dark theme overrides */
+body.theme-dark .task-description-tabs .nav-tabs {
+    border-color: var(--border-color);
+    background-color: var(--table-bg);
+}
+
+body.theme-dark .task-description-tabs .nav-tabs .nav-link {
+    color: var(--text-color);
+}
+
+body.theme-dark .task-description-tabs .nav-tabs .nav-link:hover {
+    background-color: var(--card-bg);
+}
+
+body.theme-dark .task-description-tabs .nav-tabs .nav-link.active {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color) var(--border-color) var(--card-bg);
+}
+
+body.theme-dark .task-description-tabs .tab-content {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+}
+
+/* Description tabs form section */
+.description-tabs-section .card-header {
+    padding: 0.5rem 1rem;
+}
+
 /* Scroll to top button */
 #scroll-to-top {
     display: none;

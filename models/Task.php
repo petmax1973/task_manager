@@ -189,6 +189,11 @@ class Task extends ActiveRecord
         return $this->hasMany(TaskAttachment::class, ['task_id' => 'id']);
     }
 
+    public function getDescriptionTabs()
+    {
+        return $this->hasMany(TaskDescriptionTab::class, ['task_id' => 'id'])->orderBy(['sort_order' => SORT_ASC, 'id' => SORT_ASC]);
+    }
+
     /**
      * Parses the related_tasks string into an array of integer IDs.
      * @return int[]

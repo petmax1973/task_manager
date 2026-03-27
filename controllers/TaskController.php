@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Task;
 use app\models\TaskAttachment;
+use app\models\TaskDescriptionTab;
 use app\models\TaskSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -76,6 +77,7 @@ class TaskController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->syncRelatedTasks();
+            $this->saveDescriptionTabs($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -98,6 +100,7 @@ class TaskController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->syncRelatedTasks($oldRelatedIds);
+            $this->saveDescriptionTabs($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -367,6 +370,44 @@ class TaskController extends Controller
             Yii::$app->response->setStatusCode(404);
             return ['success' => false, 'message' => 'Task not found'];
         }
+    }
+
+    /**
+     * Saves description tabs for a task from POST data.
+     * @param Task $model
+     */
+    protected function saveDescriptionTabs($model)
+    {
+        $tabsData = Yii::$app->request->post('TaskDescriptionTab', []);
+        $existingIds = [];
+
+        foreach ($tabsData as $index => $data) {
+            if (!empty($data['id'])) {
+                $tab = TaskDescriptionTab::findOne($data['id']);
+                if ($tab && $tab->task_id == $model->id) {
+                    $tab->title = $data['title'] ?? '';
+                    $tab->content = $data['content'] ?? '';
+                    $tab->sort_order = $index;
+                    $tab->save(false);
+                    $existingIds[] = $tab->id;
+                }
+            } else {
+                $tab = new TaskDescriptionTab();
+                $tab->task_id = $model->id;
+                $tab->title = $data['title'] ?? '';
+                $tab->content = $data['content'] ?? '';
+                $tab->sort_order = $index;
+                $tab->save(false);
+                $existingIds[] = $tab->id;
+            }
+        }
+
+        // Delete removed tabs
+        TaskDescriptionTab::deleteAll([
+            'and',
+            ['task_id' => $model->id],
+            ['not in', 'id', $existingIds],
+        ]);
     }
 
     /**
